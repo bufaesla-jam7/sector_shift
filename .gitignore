@@ -1,3 +1,4 @@
 /.vscode
 /.cargo/config.toml
+rust-toolchain.toml
 /target
