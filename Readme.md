@@ -3,13 +3,27 @@
 ## Run the editor:
 `cargo run -p sector_shift_editor --features dev`
 
-# sector_shift_core
+# SECTOR_SHIFT_CORE
 Data and utilities only. Meant to hold shared information between the editor and the game.
 
-# sector_shift_editor
+## TODO:
+- Need Weapon Asset System (like items and enemies)
+- Need Health components
+- Need Enemy AI
+
+# SECTOR_SHIFT_EDITOR
 A basic map editor
 
-Needs visual representation of `MapObjects` on the map.
+## TODO:
+- Need visual representation of `MapObjects` on the map.
+- Want build random map
 
-# sector_shift_game
+# SECTOR_SHIFT_GAME
 The main game
+
+## TODO:
+- Build maps with graphics / Colliders
+- Map transition on enter `TileType::Exit(id)`
+- Door functionality
+- Player FPS controller
+- Player UI
