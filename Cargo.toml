@@ -9,7 +9,6 @@ members = [
 [workspace.dependencies]
 sector_shift_core = { path = "./sector_shift_core" }
 
-anyhow = "1"
 avian3d = { version = "0.5.0", features = ["simd"] }
 bevy = "0.18"
 bitcode = "0.6"
