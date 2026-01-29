@@ -21,8 +21,10 @@ A basic map editor
 The main game
 
 ## TODO:
-- Build maps with graphics / Colliders
-- Map transition on enter `TileType::Exit(id)`
+- Build out items plugin including components / functions (spawn_item) / Weapons
+- Load MapObjects from `level.objects` in  `crate::maps::functions::spawn_level`
+- Change mesh/standardmaterial to sprites?
+- Ceiling + lighting could be thought about
+- Map transition on enter `TileType::Exit(id)` Collider + Sensor components
 - Door functionality
-- Player FPS controller
 - Player UI
