@@ -1,0 +1,4 @@
+(
+    id: "slime",
+    sprite: "sprites/enemies/slime.png"
+)

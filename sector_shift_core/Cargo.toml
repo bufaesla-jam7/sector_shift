@@ -1,0 +1,17 @@
+[package]
+name = "sector_shift_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+avian3d = { workspace = true }
+bevy = { workspace = true }
+bitcode = { workspace = true }
+ron = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+
+[lints.clippy]
+module_inception = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"

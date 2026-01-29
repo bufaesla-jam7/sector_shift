@@ -1,0 +1,38 @@
+[workspace]
+resolver = "3"
+members = [
+    "sector_shift_core",
+    "sector_shift_editor",
+    "sector_shift_game",
+]
+
+[workspace.dependencies]
+sector_shift_core = { path = "./sector_shift_core" }
+
+anyhow = "1"
+avian3d = { version = "0.5.0", features = ["simd"] }
+bevy = "0.18"
+bitcode = "0.6"
+ron = "0.12"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2"
+
+
+# [lints.clippy]
+# module_inception = "allow"
+# type_complexity = "allow"
+# too_many_arguments = "allow"
+
+# Dev optimizations
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Release optimizations
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

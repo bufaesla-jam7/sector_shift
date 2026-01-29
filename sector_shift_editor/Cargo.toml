@@ -1,0 +1,13 @@
+[package]
+name = "sector_shift_editor"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+dev = ["bevy/debug", "bevy/dynamic_linking"]
+
+[dependencies]
+sector_shift_core = { workspace = true }
+
+bevy = { workspace = true }
+bevy_egui = "0.39"

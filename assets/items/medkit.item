@@ -1,0 +1,5 @@
+(
+    id: "medkit_standard",
+    effect: Health(50),
+    sprite: "sprites/items/medkit.png"
+)
