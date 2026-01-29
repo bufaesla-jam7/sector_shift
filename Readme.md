@@ -1,8 +1,5 @@
 # 3d FPS based on classics like Wolfenstein3d
 
-## Run the editor:
-`cargo run -p sector_shift_editor --features dev`
-
 # SECTOR_SHIFT_CORE
 Data and utilities only. Meant to hold shared information between the editor and the game.
 
@@ -14,11 +11,17 @@ Data and utilities only. Meant to hold shared information between the editor and
 # SECTOR_SHIFT_EDITOR
 A basic map editor
 
+`cargo run -p sector_shift_editor --features dev`
+
 ## TODO:
 - Want build random map
 
 # SECTOR_SHIFT_GAME
 The main game
+
+Build a "level_1" first using the editor making sure to place the player start with other floor tiles to make room to move.
+
+`cargo run -p sector_shift_game --features dev`
 
 ## TODO:
 - Build out items plugin including components / functions (spawn_item) / Weapons
