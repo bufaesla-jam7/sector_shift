@@ -16,7 +16,7 @@ impl Default for UiState {
     fn default() -> Self {
         UiState {
             status_message: "Welcome to SectorShift Editor!".to_string(),
-            level_name: "Level_1".to_string(),
+            level_name: "level_1".to_string(),
             selected_door_axis: DoorAxis::Horizontal,
             player_start_direction: Direction::NORTH,
             enemy_name: "slime".to_string(),

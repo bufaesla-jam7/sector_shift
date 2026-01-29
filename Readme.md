@@ -15,7 +15,6 @@ Data and utilities only. Meant to hold shared information between the editor and
 A basic map editor
 
 ## TODO:
-- Need visual representation of `MapObjects` on the map.
 - Want build random map
 
 # SECTOR_SHIFT_GAME
