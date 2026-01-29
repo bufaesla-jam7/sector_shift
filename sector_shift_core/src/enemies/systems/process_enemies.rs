@@ -5,6 +5,7 @@ use crate::enemies::{
     resources::{EnemyDefinition, EnemyLibrary},
 };
 
+/// A system that processes loaded enemy assets and adds them to the EnemyLibrary
 pub fn process_enemies(
     mut e_enemy_asset: MessageReader<AssetEvent<EnemyAsset>>,
     asset_server: Res<AssetServer>,

@@ -28,17 +28,13 @@ pub fn handle_mouse_input(
 
             match &brush_data.brush {
                 BrushType::PlayerStart(direction) => map_data.level.set_player_start(position, *direction),
-                BrushType::Enemy(id) => map_data.level.add_enemy(position, id),
-                BrushType::EraseEnemy => map_data.level.remove_enemy(position),
-                BrushType::Exit(id) => map_data.level.add_exit(position, id),
-                BrushType::EraseExit => map_data.level.remove_exit(position),
-                BrushType::Item(id) => map_data.level.add_item(position, id),
-                BrushType::EraseItem => map_data.level.remove_item(position),
                 BrushType::Tile(tile_type) => {
-                    if let Some(tile) = map_data.level.tiles.get_mut(position) {
-                        *tile = *tile_type;
-                    }
+                    map_data.level.set_tile(position, *tile_type);
                 },
+                BrushType::Enemy(id) => map_data.level.add_enemy(position, id),
+                BrushType::Exit(id) => map_data.level.add_exit(position, id),
+                BrushType::Item(id) => map_data.level.add_item(position, id),
+                BrushType::EraseObject => map_data.level.remove_object(position),
             }
         }
     }

@@ -5,6 +5,7 @@ use crate::items::{
     resources::{ItemDefinition, ItemLibrary},
 };
 
+/// A system that processes loaded item assets and adds them to the ItemLibrary
 pub fn process_items(
     mut e_item_asset: MessageReader<AssetEvent<ItemAsset>>,
     asset_server: Res<AssetServer>,

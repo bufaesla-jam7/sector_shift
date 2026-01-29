@@ -52,19 +52,22 @@ pub fn draw_ui(
             if ui.selectable_label(is_item, "Item").clicked() {
                 brush_data.brush = BrushType::Item(ui_state.item_name.clone());
             }
-            ui.selectable_value(&mut brush_data.brush, BrushType::EraseItem, "Erase Item");
 
             let is_enemy = matches!(brush_data.brush, BrushType::Enemy(_));
             if ui.selectable_label(is_enemy, "Enemy").clicked() {
                 brush_data.brush = BrushType::Enemy(ui_state.enemy_name.clone());
             }
-            ui.selectable_value(&mut brush_data.brush, BrushType::EraseEnemy, "Erase Enemy");
 
             let is_exit = matches!(brush_data.brush, BrushType::Exit(_));
             if ui.selectable_label(is_exit, "Exit").clicked() {
                 brush_data.brush = BrushType::Exit(ui_state.exit_name.clone());
             }
-            ui.selectable_value(&mut brush_data.brush, BrushType::EraseExit, "Erase Exit");
+
+            ui.selectable_value(
+                &mut brush_data.brush,
+                BrushType::EraseObject,
+                "Erase Object",
+            );
         });
 
         if let BrushType::Tile(TileType::Door(_)) = brush_data.brush {
@@ -153,7 +156,7 @@ pub fn draw_ui(
         ui.horizontal(|ui| {
             // SAVE BUTTON
             if ui.button("Save Map").clicked() {
-                map_data.level.name = ui_state.level_name.clone();
+                map_data.level.id = ui_state.level_name.clone();
                 if let Err(e) = map_data.level.save() {
                     ui_state.status_message = format!("Error Saving Map: {}", e);
                 } else {

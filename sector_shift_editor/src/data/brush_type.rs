@@ -4,14 +4,11 @@ use sector_shift_core::prelude::*;
 pub enum BrushType {
     PlayerStart(Direction),
 
-    Enemy(String),
-    EraseEnemy,
-
-    Exit(String),
-    EraseExit,
-
-    Item(String),
-    EraseItem,
-
     Tile(TileType),
+
+    Enemy(String),
+    Exit(String),
+    Item(String),
+
+    EraseObject,
 }

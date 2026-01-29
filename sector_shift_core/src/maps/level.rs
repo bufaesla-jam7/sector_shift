@@ -19,12 +19,17 @@ pub enum LevelError {
     RonSpanned(#[from] ron::error::SpannedError),
 }
 
+/// A Level represents a game level with its tiles, player start position, and objects.
 #[derive(Serialize, Deserialize, Asset, TypePath)]
 pub struct Level {
-    pub name: String,
+    /// The unique identifier for the level. Used in MapObject::Exit.
+    pub id: String,
+    /// These are the "blocks" that make up the level.
     pub tiles: Grid<TileType>,
+    /// The starting position and direction of the player.
     pub player_start: ((i32, i32), Direction),
-    pub objects: HashMap<(i32, i32), Vec<MapObject>>,
+    /// Map objects placed in the level, keyed by their (x, y) position.
+    pub objects: HashMap<(i32, i32), MapObject>,
 }
 
 impl Default for Level {
@@ -33,24 +38,25 @@ impl Default for Level {
     }
 }
 
+// Constructor + Serialization methods
 impl Level {
-    fn get_path_from_name(level_name: &str) -> PathBuf {
-        format!("./assets/levels/{}.ron", level_name).into()
+    fn get_path_for_id(id: &str) -> PathBuf {
+        format!("./assets/levels/{}.ron", id).into()
     }
 
-    pub fn load(level_name: String) -> Self {
-        Self::try_load(level_name).unwrap_or_default()
+    pub fn load(id: String) -> Self {
+        Self::try_load(id).unwrap_or_default()
     }
 
-    pub fn try_load(level_name: String) -> Result<Self, LevelError> {
-        let data = std::fs::read_to_string(Self::get_path_from_name(&level_name))?;
+    pub fn try_load(id: String) -> Result<Self, LevelError> {
+        let data = std::fs::read_to_string(Self::get_path_for_id(&id))?;
         let level: Self = ron::de::from_str(&data)?;
         Ok(level)
     }
 
     pub fn save(&self) -> Result<(), LevelError> {
         let data = ron::ser::to_string_pretty(self, ron::ser::PrettyConfig::default())?;
-        let path = Self::get_path_from_name(&self.name);
+        let path = Self::get_path_for_id(&self.id);
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent)?;
         }
@@ -58,15 +64,18 @@ impl Level {
         Ok(())
     }
 
-    pub fn new(name: impl ToString, size: (u32, u32)) -> Self {
+    pub fn new(id: impl ToString, size: (u32, u32)) -> Self {
         Self {
-            name: name.to_string(),
+            id: id.to_string(),
             tiles: Grid::new_default(size),
             player_start: ((0, 0), Direction::NORTH),
             objects: HashMap::new(),
         }
     }
+}
 
+// Accessor methods
+impl Level {
     pub fn width(&self) -> u32 {
         self.tiles.width()
     }
@@ -74,72 +83,54 @@ impl Level {
     pub fn height(&self) -> u32 {
         self.tiles.height()
     }
+}
 
+// Level creation
+impl Level {
+    /// Sets the tile at the given position. Returns true if successful, false if out of bounds.
+    pub fn set_tile(&mut self, position: (i32, i32), tile_type: TileType) -> bool {
+        if let Some(tile) = self.tiles.get_mut(position) {
+            *tile = tile_type;
+            true
+        } else {
+            false
+        }
+    }
+
+    /// Sets the player start position and direction.
     pub fn set_player_start(&mut self, position: (i32, i32), direction: Direction) {
-        self.player_start = (position, direction);
+        // Ensure the player start is on a Floor tile
+        if self.set_tile(position, TileType::Floor) {
+            self.player_start = (position, direction);
+        }
     }
 
+    /// Removes any object at the given position.
+    pub fn remove_object(&mut self, position: (i32, i32)) {
+        self.objects.remove(&position);
+    }
+
+    /// Adds an exit at the given position leading to the specified level.
     pub fn add_exit(&mut self, position: (i32, i32), level_name: impl ToString) {
-        // add or replace any MapObject::Exit at the position
-        if let Some(map_object) = self
-            .objects
-            .get_mut(&position)
-            .and_then(|objects| objects.iter_mut().find(|obj| matches!(obj, MapObject::Exit(_))))
-        {
-            *map_object = MapObject::Exit(level_name.to_string());
-        } else {
-            self.objects.entry(position).or_default().push(MapObject::Exit(level_name.to_string()));
+        // All objects go on Floor tiles
+        if self.set_tile(position, TileType::Floor) {
+            self.objects.insert(position, MapObject::Exit(level_name.to_string()));
         }
     }
 
-    pub fn remove_exit(&mut self, position: (i32, i32)) {
-        if let Some(objects) = self.objects.get_mut(&position) {
-            objects.retain(|obj| !matches!(obj, MapObject::Exit(_)));
-            if objects.is_empty() {
-                self.objects.remove(&position);
-            }
-        }
-    }
-
+    /// Adds an enemy at the given position with the specified enemy ID.
     pub fn add_enemy(&mut self, position: (i32, i32), enemy_id: impl ToString) {
-        if let Some(map_object) = self
-            .objects
-            .get_mut(&position)
-            .and_then(|objects| objects.iter_mut().find(|obj| matches!(obj, MapObject::Enemy(_))))
-        {
-            *map_object = MapObject::Enemy(enemy_id.to_string());
-        } else {
-            self.objects.entry(position).or_default().push(MapObject::Enemy(enemy_id.to_string()));
+        // All objects go on Floor tiles
+        if self.set_tile(position, TileType::Floor) {
+            self.objects.insert(position, MapObject::Enemy(enemy_id.to_string()));
         }
     }
 
-    pub fn remove_enemy(&mut self, position: (i32, i32)) {
-        if let Some(objects) = self.objects.get_mut(&position) {
-            objects.retain(|obj| !matches!(obj, MapObject::Enemy(_)));
-            if objects.is_empty() {
-                self.objects.remove(&position);
-            }
-        }
-    }
-
+    /// Adds an item at the given position with the specified item ID.
     pub fn add_item(&mut self, position: (i32, i32), item_id: impl ToString) {
-        if let Some(map_object) = self
-            .objects
-            .get_mut(&position)
-            .and_then(|objects| objects.iter_mut().find(|obj| matches!(obj, MapObject::Item(_))))
-        {
-            *map_object = MapObject::Item(item_id.to_string());
-        } else {
-            self.objects.entry(position).or_default().push(MapObject::Item(item_id.to_string()));
-        }
-    }
-
-    pub fn remove_item(&mut self, position: (i32, i32)) {
-        if let Some(objects) = self.objects.get_mut(&position) {
-            objects.retain(|obj| !matches!(obj, MapObject::Item(_)));
-            if objects.is_empty() {
-                self.objects.remove(&position);
-            }
+        // All objects go on Floor tiles
+        if self.set_tile(position, TileType::Floor) {
+            self.objects.insert(position, MapObject::Item(item_id.to_string()));
         }
     }
 }
