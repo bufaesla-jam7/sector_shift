@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_egui::EguiPlugin;
+use bevy_egui::{EguiPlugin, input::egui_wants_any_pointer_input};
 use sector_shift_core::SectorShiftCorePlugin;
 
 use crate::{
@@ -40,7 +40,12 @@ fn main() {
     app.add_systems(Startup, spawn_camera);
     app.add_systems(
         Update,
-        (draw_grid, handle_keyboard_input, handle_mouse_input).in_set(AppSet::Running),
+        (
+            draw_grid,
+            handle_keyboard_input,
+            handle_mouse_input.run_if(not(egui_wants_any_pointer_input)),
+        )
+            .in_set(AppSet::Running),
     );
     app.add_systems(bevy_egui::EguiPrimaryContextPass, draw_ui);
 
