@@ -3,6 +3,7 @@ use thiserror::Error;
 
 use crate::enemies::resources::EnemyDefinition;
 
+#[derive(Reflect)]
 /// An intermediate step between an enemy asset and a spawned enemy
 pub struct EnemyModelData {
     pub scene: Handle<Scene>,

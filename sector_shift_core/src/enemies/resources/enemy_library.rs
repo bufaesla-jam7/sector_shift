@@ -6,7 +6,8 @@ use crate::enemies::{
 };
 
 /// A library of enemies which can be spawned
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Reflect)]
+#[reflect(Resource)]
 pub struct EnemyLibrary {
     /// A map of loaded enemy definitions and model data, sorted by their id
     pub map: HashMap<String, (EnemyDefinition, EnemyModelData)>,

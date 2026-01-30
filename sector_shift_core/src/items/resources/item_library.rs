@@ -3,7 +3,8 @@ use bevy::{platform::collections::HashMap, prelude::*};
 use crate::items::{assets::ItemAsset, resources::ItemDefinition};
 
 /// A library of items which can be spawned
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Reflect)]
+#[reflect(Resource)]
 pub struct ItemLibrary {
     /// A map of loaded item definitions sorted by their id
     pub map: HashMap<String, ItemDefinition>,
@@ -33,6 +34,6 @@ impl ItemLibrary {
 
     /// Are all assets of this library loaded?
     pub fn is_ready(&self) -> bool {
-        self.loading_initialized && self.loading.is_empty()
+        self.loading_initialized && self.loading.is_empty() && !self.map.is_empty()
     }
 }
