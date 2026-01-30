@@ -15,7 +15,7 @@ use crate::{
 pub fn spawn_level(
     commands: &mut Commands,
     meshes: &mut Assets<Mesh>,
-    mut materials: &mut Assets<StandardMaterial>,
+    materials: &mut Assets<StandardMaterial>,
     level: &Level,
     enemy_library: &EnemyLibrary,
     item_library: &ItemLibrary,
