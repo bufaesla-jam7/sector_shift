@@ -9,9 +9,8 @@ pub struct EnvObjLibrary {
     pub map: HashMap<String, EnvObjDefinition>,
     /// A list of environment object assets currently being loaded
     pub loading: Vec<Handle<EnvObjAsset>>,
-    /// Needed to prevent marking the library as ready when it hadn't even had the chance to load
-    /// anything.
-    loading_initialized: bool,
+    /// Indicates that all handles in `Self.loading` are fully loaded
+    pub loading_finished: bool,
 }
 
 impl EnvObjLibrary {
@@ -25,14 +24,7 @@ impl EnvObjLibrary {
         self.map.insert(definition.id.clone(), definition);
     }
 
-    /// Add an asset handle to `Self.loading` and mark the loading process as initialized.
-    pub fn load(&mut self, handle: Handle<EnvObjAsset>) {
-        self.loading.push(handle);
-        self.loading_initialized = true;
-    }
-
-    /// Are all assets of this library loaded?
     pub fn is_ready(&self) -> bool {
-        self.loading_initialized && self.loading.is_empty()
+        self.loading_finished && self.loading.is_empty()
     }
 }

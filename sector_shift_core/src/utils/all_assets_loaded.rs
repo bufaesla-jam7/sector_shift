@@ -1,4 +1,4 @@
-use crate::{enemies::systems::enemies_loaded, prelude::*};
+use crate::prelude::*;
 use bevy::prelude::*;
 
 pub fn all_assets_loaded(
@@ -6,5 +6,5 @@ pub fn all_assets_loaded(
     item_library: Res<ItemLibrary>,
     env_library: Res<EnvObjLibrary>,
 ) -> bool {
-    enemies_loaded(enemy_library) && item_library.is_ready() && env_library.is_ready()
+    enemy_library.is_ready() && item_library.is_ready() && env_library.is_ready()
 }

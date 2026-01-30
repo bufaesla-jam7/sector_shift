@@ -22,8 +22,6 @@ pub struct EnvObjAsset {
 }
 
 impl EnvObjAsset {
-    /// Where these assets are stored
-    pub const ASSET_PATH: &'static str = "../assets/environment";
     /// The file extension for these assets
     pub const EXTENSION: &'static str = "environment";
 }

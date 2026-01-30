@@ -30,6 +30,7 @@ pub fn poll_directory_loading_state<T: DataLibrary>(
                 }
             }
         }
+        library.mark_finished();
         commands.remove_resource::<DirectoryLoadingHandle<T>>();
     }
 }

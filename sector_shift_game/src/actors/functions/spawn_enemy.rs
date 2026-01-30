@@ -15,12 +15,12 @@ pub fn spawn_enemy(
     enemy_id: &str,
     transform: Transform,
 ) -> Option<Entity> {
-    if let Some((definition, model)) = enemy_library.get(enemy_id) {
+    if let Some(definition) = enemy_library.get(enemy_id) {
         let entity = commands
             .spawn((
                 Name::new(definition.id.clone()),
                 Enemy,
-                SceneRoot(model.scene.clone()),
+                SceneRoot(definition.scene.clone()),
                 transform,
                 Collider::capsule(0.5, 1.0), // Match sprite size
             ))
