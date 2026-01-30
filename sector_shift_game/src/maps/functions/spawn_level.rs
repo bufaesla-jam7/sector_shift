@@ -191,7 +191,7 @@ pub fn spawn_level(
                     item_id,
                     transform,
                     item_mesh.clone(),
-                    &mut materials,
+                    materials,
                 ) {
                     commands.entity(items_entity).add_child(entity);
                 }
