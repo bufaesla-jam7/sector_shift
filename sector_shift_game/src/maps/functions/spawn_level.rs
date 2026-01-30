@@ -4,7 +4,11 @@ use sector_shift_core::prelude::*;
 
 use crate::{
     MAP_CELL_CEILING, MAP_CELL_HEIGHT, MAP_CELL_WIDTH, PLAYER_HEALTH,
-    actors::{components::Player, functions::{spawn_actor, spawn_enemy}},
+    actors::{
+        components::Player,
+        functions::{spawn_actor, spawn_enemy},
+    },
+    items::functions::spawn_item,
     maps::functions::position_to_transform::position_to_transform,
 };
 
@@ -14,6 +18,7 @@ pub fn spawn_level(
     materials: &mut Assets<StandardMaterial>,
     level: &Level,
     enemy_library: &EnemyLibrary,
+    item_library: &ItemLibrary,
 ) -> Entity {
     let map_width = level.width() as f32 * MAP_CELL_WIDTH;
     let map_height = level.height() as f32 * MAP_CELL_HEIGHT;
@@ -30,6 +35,8 @@ pub fn spawn_level(
         MAP_CELL_HEIGHT,
     )); // placeholder
     let floor_mesh = meshes.add(Plane3d::default().mesh().size(map_width, map_height)); // Thin floor
+    // item mesh
+    let item_mesh = meshes.add(bevy::prelude::Rectangle::new(2.0, 2.0));
 
     // Preload materials
     let wall_material = materials.add(StandardMaterial {
@@ -111,7 +118,7 @@ pub fn spawn_level(
                         Mesh3d(door_mesh.clone()),
                         MeshMaterial3d(door_material.clone()),
                         transform,
-                        Collider::cuboid(MAP_CELL_WIDTH, MAP_CELL_CEILING, MAP_CELL_HEIGHT),
+                        //Collider::cuboid(MAP_CELL_WIDTH, MAP_CELL_CEILING, MAP_CELL_HEIGHT),
                         RigidBody::Static,
                     ))
                     .id();
@@ -177,7 +184,18 @@ pub fn spawn_level(
                 }
             },
             // TODO
-            MapObject::Item(item_id) => (),
+            MapObject::Item(item_id) => {
+                if let Some(entity) = spawn_item(
+                    commands,
+                    item_library,
+                    item_id,
+                    transform,
+                    item_mesh.clone(),
+                    materials,
+                ) {
+                    commands.entity(items_entity).add_child(entity);
+                }
+            },
             // TODO
             MapObject::Exit(level_id) => (),
         }

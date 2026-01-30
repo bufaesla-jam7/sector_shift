@@ -9,6 +9,7 @@ use crate::maps::functions::spawn_level;
 pub fn start_game(
     mut commands: Commands,
     enemy_library: Res<EnemyLibrary>,
+    item_library: Res<ItemLibrary>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut cursor_options: Single<&mut CursorOptions>,
@@ -20,6 +21,7 @@ pub fn start_game(
         &mut materials,
         &level,
         &enemy_library,
+        &item_library,
     );
 
     cursor_options.grab_mode = CursorGrabMode::Locked;

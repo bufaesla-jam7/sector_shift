@@ -4,6 +4,7 @@ use thiserror::Error;
 use crate::enemies::assets::EnemyAsset;
 
 /// An intermediate step between an enemy asset and a spawned enemy
+#[derive(Reflect)]
 pub struct EnemyDefinition {
     /// The unique ID of the enemy used by MapObject::Enemy
     pub id: String,

@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::items::{assets::ItemAsset, data::ItemEffect};
 
 /// An intermediate step between an item asset and a spawned item
+#[derive(Reflect)]
 pub struct ItemDefinition {
     /// The unique ID of the item used by MapObject::Item
     pub id: String,
