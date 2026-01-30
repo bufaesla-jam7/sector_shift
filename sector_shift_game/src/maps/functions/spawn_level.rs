@@ -36,7 +36,7 @@ pub fn spawn_level(
     )); // placeholder
     let floor_mesh = meshes.add(Plane3d::default().mesh().size(map_width, map_height)); // Thin floor
     // item mesh
-    let item_mesh = meshes.add(Rectangle::new(2.0, 2.0));
+    let item_mesh = meshes.add(bevy::prelude::Rectangle::new(2.0, 2.0));
 
     // Preload materials
     let wall_material = materials.add(StandardMaterial {
