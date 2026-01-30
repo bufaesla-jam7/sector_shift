@@ -16,8 +16,6 @@ pub struct ItemAsset {
 }
 
 impl ItemAsset {
-    /// Where these assets are stored
-    pub const ASSET_PATH: &'static str = "../assets/items";
     /// The file extension for these assets
     pub const EXTENSION: &'static str = "item";
 }

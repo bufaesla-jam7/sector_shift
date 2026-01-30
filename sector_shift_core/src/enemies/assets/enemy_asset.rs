@@ -6,17 +6,20 @@ use serde::{Deserialize, Serialize};
 /// Need to add more data later for AI, stats, etc.
 #[derive(Serialize, Deserialize, Asset, TypePath)]
 pub struct EnemyAsset {
-    /// This must be unique as it is used as the key when looking up from the "EnemyLibrary" resource or MapObject::Enemy
+    /// This must be unique as it is used as the key when looking up from the [`EnemyLibrary`] resource or MapObject::Enemy
     pub id: String,
     /// This is the path to the image to be loaded
     pub sprite: String,
     /// This is the path to the gltf model to be loaded
     pub gltf: String,
+    #[serde(skip)]
+    #[dependency]
+    /// Asset dependency, the gltf has to be loaded before we can convert [`EnemyAsset`] to
+    /// [`EnemyDefinition`]
+    pub gltf_handle: Option<Handle<Gltf>>,
 }
 
 impl EnemyAsset {
-    /// Where these assets are stored
-    pub const ASSET_PATH: &'static str = "../assets/enemies";
     /// The file extension for these assets
     pub const EXTENSION: &'static str = "enemy";
 }
