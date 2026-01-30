@@ -4,7 +4,7 @@ use sector_shift_core::prelude::*;
 
 use crate::{
     MAP_CELL_CEILING, MAP_CELL_HEIGHT, MAP_CELL_WIDTH, PLAYER_HEALTH,
-    actors::{components::Player, functions::spawn_actor},
+    actors::{components::Player, functions::{spawn_actor, spawn_enemy}},
     maps::functions::position_to_transform::position_to_transform,
 };
 

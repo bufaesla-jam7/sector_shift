@@ -1,10 +1,6 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
-
-use crate::{
-    items::{components::Item, resources::ItemLibrary},
-    utils::billboard::components::Billboard,
-};
+use sector_shift_core::prelude::*;
 
 /// Spawns an item with the following components:
 /// - Name

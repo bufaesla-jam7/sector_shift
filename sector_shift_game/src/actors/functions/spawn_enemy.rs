@@ -1,7 +1,6 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
-
-use crate::enemies::{components::Enemy, resources::EnemyLibrary};
+use sector_shift_core::prelude::*;
 
 /// Spawns an enemy with the following components:
 /// - Name
