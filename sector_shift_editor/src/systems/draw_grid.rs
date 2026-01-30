@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use sector_shift_core::prelude::TileType;
+use sector_shift_core::{maps::MapObject, prelude::TileType};
 
 use crate::{CELL_SIZE, HALF_CELL_SIZE, resources::MapData};
 
@@ -48,19 +48,36 @@ pub fn draw_grid(mut gizmos: Gizmos, editor: Res<MapData>) {
             position.0 as f32 * CELL_SIZE + HALF_CELL_SIZE,
             position.1 as f32 * CELL_SIZE + HALF_CELL_SIZE,
         );
+        let color = object.color();
 
-        gizmos.rect_2d(center, Vec2::splat(CELL_SIZE * 0.9), object.color());
+        match object {
+            MapObject::Exit(_) => {
+                gizmos.cross_2d(center, HALF_CELL_SIZE * 0.8, color);
+            },
+            MapObject::Enemy(_) => {
+                let isometry = Isometry2d {
+                    rotation: Rot2::FRAC_PI_4,
+                    translation: center,
+                };
+                gizmos.cross_2d(isometry, HALF_CELL_SIZE * 0.8, color);
+            },
+            MapObject::Item(_) => {
+                gizmos.circle_2d(center, HALF_CELL_SIZE * 0.8, color);
+            },
+        }
     }
 
     // Draw player start
+    let (position, direction) = editor.level.player_start;
     let center = Vec2::new(
-        editor.level.player_start.0.0 as f32 * CELL_SIZE + HALF_CELL_SIZE,
-        editor.level.player_start.0.1 as f32 * CELL_SIZE + HALF_CELL_SIZE,
+        position.0 as f32 * CELL_SIZE + HALF_CELL_SIZE,
+        position.1 as f32 * CELL_SIZE + HALF_CELL_SIZE,
     );
-
-    gizmos.rect_2d(
-        center,
-        Vec2::splat(CELL_SIZE * 0.9),
-        Color::srgb(1.0, 1.0, 0.0),
+    let coord = Vec2::new(
+        direction.coord().0 as f32 * HALF_CELL_SIZE * 0.8,
+        direction.coord().1 as f32 * HALF_CELL_SIZE * 0.8,
     );
+    let start = center - coord;
+    let end = center + coord;
+    gizmos.arrow_2d(start, end, Color::srgb(1.0, 1.0, 0.0));
 }
