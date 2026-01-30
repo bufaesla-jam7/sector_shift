@@ -4,13 +4,20 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-dev = ["bevy/debug", "bevy/dynamic_linking"]
+dev = [
+  "bevy/debug",
+  "bevy/dynamic_linking",
+  "dep:bevy_egui",
+  "dep:bevy-inspector-egui",
+]
 
 [dependencies]
 sector_shift_core = { workspace = true }
 
 avian3d = { workspace = true }
 bevy = { workspace = true }
+bevy_egui = { workspace = true, optional = true }
+bevy-inspector-egui = { workspace = true, optional = true }
 bitcode = { workspace = true }
 ron = { workspace = true }
 serde = { workspace = true }
@@ -20,3 +27,4 @@ thiserror = { workspace = true }
 module_inception = "allow"
 too_many_arguments = "allow"
 type_complexity = "allow"
+

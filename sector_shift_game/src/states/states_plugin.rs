@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use sector_shift_core::prelude::*;
 
+#[cfg(feature = "dev")]
+use crate::states::states::DebugHudState;
 use crate::states::{
     states::GameState,
     system_sets::GameSet,
@@ -11,6 +13,8 @@ pub struct StatesPlugin;
 impl Plugin for StatesPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<GameState>();
+        #[cfg(feature = "dev")]
+        app.init_state::<DebugHudState>();
 
         app.configure_sets(
             Update,
