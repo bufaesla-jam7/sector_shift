@@ -1,12 +1,8 @@
 use bevy::prelude::*;
 
 use crate::{
-    items::{
-        assets::ItemAsset,
-        resources::ItemLibrary,
-        systems::{load_items, process_items},
-    },
-    utils::generic_asset_loader::GenericAssetLoader,
+    items::{assets::ItemAsset, resources::ItemLibrary, systems::process_items},
+    utils::{generic_asset_loader::GenericAssetLoader, generic_directory_loader::DirectoryLoaderPlugin},
 };
 
 #[derive(Clone)]
@@ -28,8 +24,10 @@ impl<T: States + Copy> Plugin for ItemsPlugin<T> {
         ]));
 
         app.init_resource::<ItemLibrary>();
+        app.add_plugins(DirectoryLoaderPlugin::<ItemLibrary, _>::new(
+            self.asset_load_state,
+        ));
 
-        app.add_systems(OnEnter(self.asset_load_state), load_items);
         app.add_systems(
             Update,
             process_items.run_if(in_state(self.asset_load_state)),

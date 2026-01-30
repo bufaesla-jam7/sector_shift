@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use sector_shift_core::prelude::{enemies_loaded, items_loaded};
+use sector_shift_core::prelude::all_assets_loaded;
 
 use crate::states::{states::AppState, system_sets::AppSet, systems::set_app_state_running};
 
@@ -17,7 +17,7 @@ impl Plugin for StatesPlugin {
 
         app.add_systems(
             Update,
-            set_app_state_running.in_set(AppSet::LoadAssets).run_if(items_loaded.and(enemies_loaded)),
+            set_app_state_running.in_set(AppSet::LoadAssets).run_if(all_assets_loaded),
         );
     }
 }

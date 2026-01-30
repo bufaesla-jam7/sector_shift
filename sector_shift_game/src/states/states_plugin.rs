@@ -33,7 +33,7 @@ impl Plugin for StatesPlugin {
 
         app.add_systems(
             Update,
-            set_game_state_setup_game.in_set(GameSet::LoadAssets).run_if(items_loaded.and(enemies_loaded)),
+            set_game_state_setup_game.in_set(GameSet::LoadAssets).run_if(all_assets_loaded),
         );
 
         app.add_systems(Update, set_game_state_running.in_set(GameSet::SetupGame));

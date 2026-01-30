@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 
-use crate::{enemies::EnemiesPlugin, items::ItemsPlugin, utils::UtilsPlugin};
+use crate::{enemies::EnemiesPlugin, environment::EnvObjsPlugin, items::ItemsPlugin, utils::UtilsPlugin};
 
 pub struct SectorShiftCorePlugin<T: States + Copy> {
     enemies_plugin: EnemiesPlugin<T>,
     items_plugin: ItemsPlugin<T>,
+    env_objs_plugin: EnvObjsPlugin<T>,
 }
 
 impl<T: States + Copy> SectorShiftCorePlugin<T> {
@@ -12,6 +13,7 @@ impl<T: States + Copy> SectorShiftCorePlugin<T> {
         Self {
             enemies_plugin: EnemiesPlugin::new(asset_load_state),
             items_plugin: ItemsPlugin::new(asset_load_state),
+            env_objs_plugin: EnvObjsPlugin::new(asset_load_state),
         }
     }
 }
@@ -20,6 +22,7 @@ impl<T: States + Copy> Plugin for SectorShiftCorePlugin<T> {
     fn build(&self, app: &mut App) {
         app.add_plugins(self.enemies_plugin.clone());
         app.add_plugins(self.items_plugin.clone());
+        app.add_plugins(self.env_objs_plugin.clone());
 
         app.add_plugins(UtilsPlugin);
     }

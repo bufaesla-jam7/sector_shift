@@ -1,4 +1,5 @@
 pub mod enemies;
+pub mod environment;
 pub mod items;
 pub mod maps;
 pub mod utils;
@@ -10,13 +11,14 @@ pub mod prelude {
     // Enemies
     pub use crate::enemies::components::Enemy;
     pub use crate::enemies::resources::EnemyLibrary;
-    pub use crate::enemies::systems::enemies_loaded;
 
     // Items
     pub use crate::items::components::Item;
     pub use crate::items::data::ItemEffect;
     pub use crate::items::resources::ItemLibrary;
-    pub use crate::items::systems::items_loaded;
+
+    // Environment objects
+    pub use crate::environment::resources::EnvObjLibrary;
 
     // Maps
     pub use crate::maps::DoorAxis;
@@ -25,6 +27,7 @@ pub mod prelude {
     pub use crate::maps::TileType;
 
     // Utils
+    pub use crate::utils::all_assets_loaded;
     pub use crate::utils::billboard::components::Billboard;
     pub use crate::utils::direction::CardinalDirection;
     pub use crate::utils::direction::Direction;

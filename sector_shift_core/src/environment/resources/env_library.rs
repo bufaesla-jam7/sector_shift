@@ -1,0 +1,38 @@
+use bevy::{platform::collections::HashMap, prelude::*};
+
+use crate::environment::{assets::EnvObjAsset, resources::EnvObjDefinition};
+
+/// A library of environment objects which can be spawned
+#[derive(Resource, Default)]
+pub struct EnvObjLibrary {
+    /// A map of loaded environment definitions sorted by their id
+    pub map: HashMap<String, EnvObjDefinition>,
+    /// A list of environment object assets currently being loaded
+    pub loading: Vec<Handle<EnvObjAsset>>,
+    /// Needed to prevent marking the library as ready when it hadn't even had the chance to load
+    /// anything.
+    loading_initialized: bool,
+}
+
+impl EnvObjLibrary {
+    /// Get an environment definition by its unique ID
+    pub fn get(&self, id: &str) -> Option<&EnvObjDefinition> {
+        self.map.get(id)
+    }
+
+    /// Add a new environment object definition to the library
+    pub fn add(&mut self, definition: EnvObjDefinition) {
+        self.map.insert(definition.id.clone(), definition);
+    }
+
+    /// Add an asset handle to `Self.loading` and mark the loading process as initialized.
+    pub fn load(&mut self, handle: Handle<EnvObjAsset>) {
+        self.loading.push(handle);
+        self.loading_initialized = true;
+    }
+
+    /// Are all assets of this library loaded?
+    pub fn is_ready(&self) -> bool {
+        self.loading_initialized && self.loading.is_empty()
+    }
+}
