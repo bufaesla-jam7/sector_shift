@@ -6,7 +6,7 @@ use bevy::{
 };
 use serde::Deserialize;
 
-use crate::utils::generic_asset_loader::GenericAssetLoaderError;
+use crate::utils::generic_asset_loader::{GenericAssetLoaderError, LoadAssetDependencies};
 
 #[derive(TypePath)]
 pub struct GenericAssetLoader<T> {
@@ -29,7 +29,7 @@ impl<T> GenericAssetLoader<T> {
     }
 }
 
-impl<T: Asset + for<'de> Deserialize<'de>> AssetLoader for GenericAssetLoader<T> {
+impl<T: Asset + for<'de> Deserialize<'de> + LoadAssetDependencies> AssetLoader for GenericAssetLoader<T> {
     type Asset = T;
 
     type Settings = ();
@@ -40,11 +40,13 @@ impl<T: Asset + for<'de> Deserialize<'de>> AssetLoader for GenericAssetLoader<T>
         &self,
         reader: &mut dyn Reader,
         _settings: &Self::Settings,
-        _load_context: &mut LoadContext<'_>,
+        load_context: &mut LoadContext<'_>,
     ) -> Result<Self::Asset, Self::Error> {
         let mut contents = String::new();
         reader.read_to_string(&mut contents).await?;
-        Ok(ron::de::from_str::<T>(&contents)?)
+        let mut asset = ron::de::from_str::<T>(&contents)?;
+        asset.load_dependencies(load_context);
+        Ok(asset)
     }
 
     fn extensions(&self) -> &[&str] {

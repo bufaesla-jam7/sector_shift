@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{asset::UnapprovedPathMode, prelude::*};
 
 use sector_shift_core::prelude::*;
 
@@ -15,15 +15,29 @@ mod constants;
 pub use self::constants::*;
 
 fn main() {
-    let mut app = App::new();
+    let asset_path = env!("CARGO_MANIFEST_DIR")
+        .rsplit_once("/sector_shift_game")
+        .map(|(p, _)| p.to_string())
+        .unwrap_or_else(|| ".".to_string())
+        + "/assets";
 
-    app.add_plugins(DefaultPlugins.set(WindowPlugin {
-        primary_window: Some(Window {
-            title: "SectorShift".to_string(),
-            ..Default::default()
-        }),
-        ..Default::default()
-    }));
+    let mut app = App::new();
+    app.add_plugins(
+        DefaultPlugins
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "SectorShift".to_string(),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            })
+            .set(AssetPlugin {
+                file_path: asset_path,
+                // Allow scenes to be loaded from anywhere on disk
+                unapproved_path_mode: UnapprovedPathMode::Allow,
+                ..default()
+            }),
+    );
 
     app.add_plugins(avian3d::PhysicsPlugins::default());
 

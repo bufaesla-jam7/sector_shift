@@ -1,0 +1,5 @@
+(
+	id: "skybox",
+	gltf: "models/environment/Skybox.glb",
+	placeable: false
+)

@@ -3,3 +3,4 @@
 rust-toolchain.toml
 /target
 /assets/levels
+justfile
