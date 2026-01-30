@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_egui::EguiPlugin;
-use sector_shift_core::SectorShiftCorePlugin;
+use sector_shift_core::{SectorShiftCorePlugin, utils::asset_plugin_with_fixed_path};
 
 use crate::{
     resources::{BrushData, MapData, UiState},
@@ -19,13 +19,17 @@ pub use self::constants::*;
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins(DefaultPlugins.set(WindowPlugin {
-        primary_window: Some(Window {
-            title: "SectorShift".to_string(),
-            ..Default::default()
-        }),
-        ..Default::default()
-    }));
+    app.add_plugins(
+        DefaultPlugins
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "SectorShift".to_string(),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            })
+            .set(asset_plugin_with_fixed_path()),
+    );
 
     app.add_plugins(EguiPlugin::default());
 
