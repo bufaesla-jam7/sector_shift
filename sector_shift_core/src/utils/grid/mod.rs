@@ -1,5 +1,3 @@
-pub mod shapes;
-
 mod point_iter_row_major;
 pub use self::point_iter_row_major::*;
 

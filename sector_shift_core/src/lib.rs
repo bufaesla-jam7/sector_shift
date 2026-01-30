@@ -35,13 +35,7 @@ pub mod prelude {
     pub use crate::utils::direction::VerticalDirection;
     pub use crate::utils::generic_asset_loader::GenericAssetLoader;
     pub use crate::utils::generic_asset_loader::GenericAssetLoaderError;
-    pub use crate::utils::grid::Grid;
-    pub use crate::utils::grid::shapes::BoxedShape;
-    pub use crate::utils::grid::shapes::Shape;
-    pub use crate::utils::grid::shapes::ShapeWithBorder;
-    pub use crate::utils::grid::shapes::circle::Circle;
-    pub use crate::utils::grid::shapes::line::Line;
-    pub use crate::utils::grid::shapes::rectangle::Rectangle;
+    pub use crate::utils::grid;
 
     // Plugin
     pub use crate::SectorShiftCorePlugin;
