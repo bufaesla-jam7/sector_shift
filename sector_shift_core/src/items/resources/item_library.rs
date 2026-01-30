@@ -34,6 +34,6 @@ impl ItemLibrary {
 
     /// Are all assets of this library loaded?
     pub fn is_ready(&self) -> bool {
-        self.loading_initialized && self.loading.is_empty() && !self.map.is_empty()
+        self.loading_initialized && self.loading.is_empty()
     }
 }
