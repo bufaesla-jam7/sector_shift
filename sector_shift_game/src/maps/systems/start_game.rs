@@ -8,12 +8,19 @@ use crate::maps::functions::spawn_level;
 
 pub fn start_game(
     mut commands: Commands,
+    enemy_library: Res<EnemyLibrary>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut cursor_options: Single<&mut CursorOptions>,
 ) {
     let level = Level::load("level_1");
-    spawn_level(&mut commands, &mut meshes, &mut materials, &level);
+    spawn_level(
+        &mut commands,
+        &mut meshes,
+        &mut materials,
+        &level,
+        &enemy_library,
+    );
 
     cursor_options.grab_mode = CursorGrabMode::Locked;
     cursor_options.visible = false;

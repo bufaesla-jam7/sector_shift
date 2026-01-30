@@ -5,6 +5,7 @@ use sector_shift_core::prelude::*;
 use crate::{
     MAP_CELL_CEILING, MAP_CELL_HEIGHT, MAP_CELL_WIDTH, PLAYER_HEALTH,
     actors::{components::Player, functions::spawn_actor},
+    maps::functions::position_to_transform::position_to_transform,
 };
 
 pub fn spawn_level(
@@ -12,6 +13,7 @@ pub fn spawn_level(
     meshes: &mut Assets<Mesh>,
     materials: &mut Assets<StandardMaterial>,
     level: &Level,
+    enemy_library: &EnemyLibrary,
 ) -> Entity {
     let map_width = level.width() as f32 * MAP_CELL_WIDTH;
     let map_height = level.height() as f32 * MAP_CELL_HEIGHT;
@@ -88,11 +90,7 @@ pub fn spawn_level(
         let Some(tile) = level.tiles.get(position) else {
             continue;
         };
-        let transform = Transform::from_xyz(
-            MAP_CELL_WIDTH * (position.0 as f32 + 0.5),
-            MAP_CELL_CEILING / 2.0,
-            MAP_CELL_HEIGHT * (position.1 as f32 + 0.5),
-        );
+        let transform = position_to_transform(position);
 
         match tile {
             TileType::Wall => {
@@ -148,7 +146,42 @@ pub fn spawn_level(
 
     commands.entity(player_entity).add_child(camera_entity);
 
-    // Spawn MapObjects
+    // Spawn container for the map objects
+    let objects_entity = commands.spawn((Name::new("Objects"), Transform::default())).id();
+
+    // Spawn container for the enemies
+    let enemies_entity = commands
+        .spawn((
+            Name::new("Enemies"),
+            Transform::default(),
+            ChildOf(objects_entity),
+        ))
+        .id();
+
+    // Spawn container for the items
+    let items_entity = commands
+        .spawn((
+            Name::new("Items"),
+            Transform::default(),
+            ChildOf(objects_entity),
+        ))
+        .id();
+
+    // Spawn the [`MapObject`]s
+    for (position, object) in &level.objects {
+        let transform = position_to_transform(*position);
+        match object {
+            MapObject::Enemy(enemy_id) => {
+                if let Some(entity) = spawn_enemy(commands, enemy_library, enemy_id, transform) {
+                    commands.entity(enemies_entity).add_child(entity);
+                }
+            },
+            // TODO
+            MapObject::Item(item_id) => (),
+            // TODO
+            MapObject::Exit(level_id) => (),
+        }
+    }
 
     // Spawn a light
     commands.spawn((
@@ -164,6 +197,7 @@ pub fn spawn_level(
     // Build level hierarchy
     commands.entity(level_entity).add_child(floor_entity);
     commands.entity(level_entity).add_child(cells_entity);
+    commands.entity(level_entity).add_child(objects_entity);
 
     // Return level entity
     level_entity

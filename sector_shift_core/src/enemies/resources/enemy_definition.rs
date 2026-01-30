@@ -8,6 +8,7 @@ pub struct EnemyDefinition {
     pub id: String,
     /// The sprite handle for the enemy
     pub sprite: Handle<Image>,
+    pub gltf: Handle<Gltf>,
 }
 
 impl EnemyDefinition {
@@ -16,6 +17,7 @@ impl EnemyDefinition {
         Self {
             id: asset.id.clone(),
             sprite: asset_server.load(&asset.sprite),
+            gltf: asset_server.load(&asset.gltf),
         }
     }
 }

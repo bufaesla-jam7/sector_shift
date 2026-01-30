@@ -26,6 +26,9 @@ Build a "level_1" first using the editor making sure to place the player start w
 ## TODO:
 - Build out items plugin including components / functions (spawn_item) / Weapons
 - Load MapObjects from `level.objects` in  `crate::maps::functions::spawn_level`
+    - [x] spawn enemies
+    - [ ] spawn items
+    - [ ] spawn level exit
 - Change mesh/standardmaterial to sprites?
 - Ceiling + lighting could be thought about
 - Map transition on enter `TileType::Exit(id)` Collider + Sensor components

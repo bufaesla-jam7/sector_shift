@@ -1,4 +1,5 @@
 (
     id: "slime",
-    sprite: "sprites/enemies/slime.png"
+    sprite: "sprites/enemies/slime.png",
+	gltf: "models/enemies/Alien.glb"
 )
