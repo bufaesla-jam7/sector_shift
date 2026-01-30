@@ -10,6 +10,8 @@ pub struct EnemyAsset {
     pub id: String,
     /// This is the path to the image to be loaded
     pub sprite: String,
+    /// This is the path to the gltf model to be loaded
+    pub gltf: String,
 }
 
 impl EnemyAsset {
