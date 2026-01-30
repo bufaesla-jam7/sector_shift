@@ -2,3 +2,4 @@
 /.cargo/config.toml
 rust-toolchain.toml
 /target
+/assets/levels

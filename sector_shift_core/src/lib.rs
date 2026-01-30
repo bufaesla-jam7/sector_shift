@@ -9,14 +9,12 @@ pub use self::sector_shift_core_plugin::*;
 pub mod prelude {
     // Enemies
     pub use crate::enemies::components::Enemy;
-    pub use crate::enemies::functions::spawn_enemy;
     pub use crate::enemies::resources::EnemyLibrary;
     pub use crate::enemies::systems::enemies_loaded;
 
     // Items
     pub use crate::items::components::Item;
     pub use crate::items::data::ItemEffect;
-    pub use crate::items::functions::spawn_item;
     pub use crate::items::resources::ItemLibrary;
     pub use crate::items::systems::items_loaded;
 

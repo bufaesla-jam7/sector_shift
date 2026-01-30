@@ -1,17 +1,14 @@
 [workspace]
 resolver = "3"
-members = [
-    "sector_shift_core",
-    "sector_shift_editor",
-    "sector_shift_game",
-]
+members = ["sector_shift_core", "sector_shift_editor", "sector_shift_game"]
 
 [workspace.dependencies]
 sector_shift_core = { path = "./sector_shift_core" }
 
-anyhow = "1"
 avian3d = { version = "0.5.0", features = ["simd"] }
 bevy = "0.18"
+bevy_egui = "0.39"
+bevy-inspector-egui = "0.36"
 bitcode = "0.6"
 ron = "0.12"
 serde = { version = "1.0", features = ["derive"] }

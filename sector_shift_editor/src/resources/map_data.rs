@@ -9,7 +9,7 @@ pub struct MapData {
 impl Default for MapData {
     fn default() -> Self {
         Self {
-            level: Level::new("Level1", (64, 64)),
+            level: Level::load("level_1"),
         }
     }
 }

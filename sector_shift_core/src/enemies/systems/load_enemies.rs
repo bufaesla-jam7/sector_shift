@@ -11,7 +11,7 @@ pub fn load_enemies(asset_server: Res<AssetServer>, mut enemy_library: ResMut<En
             let path = entry.path();
             if path.extension().and_then(|s| s.to_str()) == Some(EnemyAsset::EXTENSION) {
                 let handle: Handle<EnemyAsset> = asset_server.load(path);
-                enemy_library.loading.push(handle.clone());
+                enemy_library.loading_assets.push(handle.clone());
             }
         }
     }

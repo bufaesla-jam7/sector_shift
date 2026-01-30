@@ -1,15 +1,36 @@
 # 3d FPS based on classics like Wolfenstein3d
 
-## Run the editor:
-`cargo run -p sector_shift_editor --features dev`
-
-# sector_shift_core
+# SECTOR_SHIFT_CORE
 Data and utilities only. Meant to hold shared information between the editor and the game.
 
-# sector_shift_editor
+## TODO:
+- Need Weapon Asset System (like items and enemies)
+- Need Health components
+- Need Enemy AI
+
+# SECTOR_SHIFT_EDITOR
 A basic map editor
 
-Needs visual representation of `MapObjects` on the map.
+`cargo run -p sector_shift_editor --features dev`
 
-# sector_shift_game
+## TODO:
+- Want build random map
+
+# SECTOR_SHIFT_GAME
 The main game
+
+Build a "level_1" first using the editor making sure to place the player start with other floor tiles to make room to move.
+
+`cargo run -p sector_shift_game --features dev`
+
+## TODO:
+- Build out items plugin including components / functions (spawn_item) / Weapons
+- Load MapObjects from `level.objects` in  `crate::maps::functions::spawn_level`
+    - [x] spawn enemies
+    - [ ] spawn items
+    - [ ] spawn level exit
+- Change mesh/standardmaterial to sprites?
+- Ceiling + lighting could be thought about
+- Map transition on enter `TileType::Exit(id)` Collider + Sensor components
+- Door functionality
+- Player UI

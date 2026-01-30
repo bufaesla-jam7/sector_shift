@@ -1,7 +1,6 @@
 pub mod assets;
 pub mod components;
 pub mod data;
-pub mod functions;
 pub mod resources;
 pub mod systems;
 

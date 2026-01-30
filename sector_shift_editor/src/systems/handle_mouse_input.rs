@@ -1,4 +1,5 @@
 use bevy::{prelude::*, window::PrimaryWindow};
+use bevy_egui::EguiContexts;
 
 use crate::{
     CELL_SIZE,
@@ -7,12 +8,20 @@ use crate::{
 };
 
 pub fn handle_mouse_input(
+    mut contexts: EguiContexts,
     mouse_input: Res<ButtonInput<MouseButton>>,
     mut map_data: ResMut<MapData>,
     brush_data: Res<BrushData>,
     q_window: Single<&Window, With<PrimaryWindow>>,
     q_camera: Single<(&Camera, &GlobalTransform)>,
 ) {
+    // Don't click through
+    if let Ok(ctx) = contexts.ctx_mut()
+        && (ctx.is_pointer_over_area() || ctx.wants_pointer_input())
+    {
+        return;
+    }
+
     if mouse_input.pressed(MouseButton::Left) {
         let (camera, camera_transform) = *q_camera;
         let window = *q_window;

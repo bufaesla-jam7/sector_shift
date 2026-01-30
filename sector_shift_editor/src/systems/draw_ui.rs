@@ -167,6 +167,7 @@ pub fn draw_ui(
             // LOAD BUTTON
             if ui.button("Load Map").clicked() {
                 if let Ok(level) = Level::try_load(ui_state.level_name.clone()) {
+                    ui_state.player_start_direction = level.player_start.1;
                     map_data.level = level;
                     ui_state.status_message = "Map Loaded Successfully".to_string();
                 } else {

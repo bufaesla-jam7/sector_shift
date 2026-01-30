@@ -1,0 +1,5 @@
+(
+	id: "alien",
+	sprite: "sprites/enemies/alien_head.png",
+	gltf: "models/enemies/Alien.glb"
+)

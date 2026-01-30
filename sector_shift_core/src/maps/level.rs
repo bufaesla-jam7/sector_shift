@@ -44,12 +44,12 @@ impl Level {
         format!("./assets/levels/{}.ron", id).into()
     }
 
-    pub fn load(id: String) -> Self {
+    pub fn load(id: impl ToString) -> Self {
         Self::try_load(id).unwrap_or_default()
     }
 
-    pub fn try_load(id: String) -> Result<Self, LevelError> {
-        let data = std::fs::read_to_string(Self::get_path_for_id(&id))?;
+    pub fn try_load(id: impl ToString) -> Result<Self, LevelError> {
+        let data = std::fs::read_to_string(Self::get_path_for_id(&id.to_string()))?;
         let level: Self = ron::de::from_str(&data)?;
         Ok(level)
     }

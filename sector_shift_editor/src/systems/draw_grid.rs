@@ -48,19 +48,21 @@ pub fn draw_grid(mut gizmos: Gizmos, editor: Res<MapData>) {
             position.0 as f32 * CELL_SIZE + HALF_CELL_SIZE,
             position.1 as f32 * CELL_SIZE + HALF_CELL_SIZE,
         );
+        let color = object.color();
 
         match object {
             MapObject::Exit(_) => {
-                gizmos.cross_2d(center, HALF_CELL_SIZE * 0.8, Color::srgb(0.1, 0.4, 0.8));
+                gizmos.cross_2d(center, HALF_CELL_SIZE * 0.8, color);
             },
             MapObject::Enemy(_) => {
-                let coord = Vec2::new(HALF_CELL_SIZE * 0.8, HALF_CELL_SIZE * 0.8);
-                let start = center - coord;
-                let end = center + coord;
-                gizmos.line_2d(start, end, Color::srgb(0.8, 0.1, 0.1));
+                let isometry = Isometry2d {
+                    rotation: Rot2::FRAC_PI_4,
+                    translation: center,
+                };
+                gizmos.cross_2d(isometry, HALF_CELL_SIZE * 0.8, color);
             },
             MapObject::Item(_) => {
-                gizmos.circle_2d(center, HALF_CELL_SIZE * 0.8, Color::srgb(0.1, 0.8, 0.1));
+                gizmos.circle_2d(center, HALF_CELL_SIZE * 0.8, color);
             },
         }
     }
@@ -77,5 +79,5 @@ pub fn draw_grid(mut gizmos: Gizmos, editor: Res<MapData>) {
     );
     let start = center - coord;
     let end = center + coord;
-    gizmos.arrow_2d(start, end, Color::srgb(0.1, 0.8, 0.1));
+    gizmos.arrow_2d(start, end, Color::srgb(1.0, 1.0, 0.0));
 }
