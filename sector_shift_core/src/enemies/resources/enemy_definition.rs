@@ -1,7 +1,7 @@
 use bevy::{platform::collections::HashMap, prelude::*};
 use thiserror::Error;
 
-use crate::enemies::assets::EnemyAsset;
+use crate::{enemies::assets::EnemyAsset, prelude::Enemy};
 
 /// An intermediate step between an enemy asset and a spawned enemy
 #[derive(Reflect)]
@@ -10,6 +10,8 @@ pub struct EnemyDefinition {
     pub id: String,
     /// The sprite handle for the enemy
     pub sprite: Handle<Image>,
+    /// [`Enemy`] component to be directly inserted on each enemy entity
+    pub attributes: Enemy,
     pub gltf: Handle<Gltf>,
     pub scene: Handle<Scene>,
     pub graph: Handle<AnimationGraph>,
@@ -38,6 +40,7 @@ impl EnemyDefinition {
         Ok(Self {
             id: asset.id.clone(),
             sprite: asset_server.load(&asset.sprite),
+            attributes: asset.attributes.clone(),
             gltf: asset_server.load(&asset.gltf),
             scene: gltf.scenes.first().ok_or(EnemyDefinitionLoadError::NoDefaultScene)?.clone(),
             graph: graphs.add(graph),

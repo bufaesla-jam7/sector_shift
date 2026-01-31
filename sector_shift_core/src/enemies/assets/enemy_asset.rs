@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use crate::prelude::Enemy;
+
 /// This gets loaded by the AssetManager
 /// Represents an enemy type that can be spawned in levels
 /// Need to add more data later for AI, stats, etc.
@@ -17,6 +19,8 @@ pub struct EnemyAsset {
     /// Asset dependency, the gltf has to be loaded before we can convert [`EnemyAsset`] to
     /// [`EnemyDefinition`]
     pub gltf_handle: Option<Handle<Gltf>>,
+    /// Attributes directly defining [`Enemy`] component
+    pub attributes: Enemy,
 }
 
 impl EnemyAsset {

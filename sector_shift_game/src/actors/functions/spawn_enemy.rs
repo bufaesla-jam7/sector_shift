@@ -2,12 +2,16 @@ use avian3d::prelude::*;
 use bevy::prelude::*;
 use sector_shift_core::prelude::*;
 
+use crate::actors::enemy_controller::EnemyController;
+
 /// Spawns an enemy with the following components:
-/// - Name
-/// - Enemy
-/// - SceneRoot
-/// - Transform
-/// - Collider (capsule)
+/// - [`Name`]
+/// - [`Enemy`]
+/// - [`EnemyController`]
+/// - [`RigidBody`] and [`LockedAxes`] as required by [`EnemyController`]
+/// - [`SceneRoot`]
+/// - [`Transform`]
+/// - [`Collider`] (capsule)
 ///
 pub fn spawn_enemy(
     commands: &mut Commands,
@@ -19,7 +23,8 @@ pub fn spawn_enemy(
         let entity = commands
             .spawn((
                 Name::new(definition.id.clone()),
-                Enemy,
+                definition.attributes.clone(),
+                EnemyController::default(),
                 SceneRoot(definition.scene.clone()),
                 transform,
                 Collider::capsule(0.5, 1.0), // Match sprite size
