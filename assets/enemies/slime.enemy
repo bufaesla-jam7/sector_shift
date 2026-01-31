@@ -1,5 +1,9 @@
 (
     id: "slime",
     sprite: "sprites/enemies/slime.png",
-	gltf: "models/enemies/Alien.glb"
+	gltf: "models/enemies/Alien.glb",
+	attributes: (
+		rotation_speed: 1.,
+		movement_velocity: 1.,
+	)
 )
