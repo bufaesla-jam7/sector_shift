@@ -1,6 +1,6 @@
 use avian3d::prelude::*;
 use bevy::prelude::*;
-use sector_shift_core::prelude::*;
+use sector_shift_core::{environment::components::Skybox, prelude::*};
 
 use crate::{
     MAP_CELL_CEILING, MAP_CELL_HEIGHT, MAP_CELL_WIDTH, PLAYER_HEALTH,
@@ -17,6 +17,7 @@ pub fn spawn_level(
     meshes: &mut Assets<Mesh>,
     materials: &mut Assets<StandardMaterial>,
     level: &Level,
+    environment_library: &EnvObjLibrary,
     enemy_library: &EnemyLibrary,
     item_library: &ItemLibrary,
 ) -> Entity {
@@ -201,8 +202,18 @@ pub fn spawn_level(
         }
     }
 
+    // Spawn container for the global environment
+    let env_entity = commands
+        .spawn((
+            Name::new("Environment"),
+            Transform::default(),
+            ChildOf(level_entity),
+        ))
+        .id();
+
     // Spawn a light
     commands.spawn((
+        Name::new("PointLight"),
         PointLight {
             intensity: 1_500_000.0,
             shadows_enabled: true,
@@ -210,7 +221,22 @@ pub fn spawn_level(
             ..default()
         },
         Transform::from_xyz(map_width / 2.0, 10.0, map_height / 2.0),
+        ChildOf(env_entity),
     ));
+
+    // Spawn the skybox
+    if let Some(skybox_definition) = environment_library.get("skybox") {
+        commands.spawn((
+            Name::new("Skybox"),
+            Skybox {
+                rotation_speed: 0.5,
+                rotation_axis: Vec3::new(1., 0., 1.).normalize(),
+            },
+            SceneRoot(skybox_definition.scene.clone()),
+            Transform::from_scale(Vec3::splat(1000.)),
+            ChildOf(env_entity),
+        ));
+    }
 
     // Build level hierarchy
     commands.entity(level_entity).add_child(floor_entity);

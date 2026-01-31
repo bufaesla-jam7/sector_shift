@@ -8,6 +8,7 @@ use crate::maps::functions::spawn_level;
 
 pub fn start_game(
     mut commands: Commands,
+    environment_library: Res<EnvObjLibrary>,
     enemy_library: Res<EnemyLibrary>,
     item_library: Res<ItemLibrary>,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -20,6 +21,7 @@ pub fn start_game(
         &mut meshes,
         &mut materials,
         &level,
+        &environment_library,
         &enemy_library,
         &item_library,
     );
