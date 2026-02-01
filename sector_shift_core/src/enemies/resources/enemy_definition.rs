@@ -1,7 +1,10 @@
 use bevy::{platform::collections::HashMap, prelude::*};
 use thiserror::Error;
 
-use crate::{enemies::assets::EnemyAsset, prelude::Enemy};
+use crate::{
+    enemies::{assets::EnemyAsset, components::EnemyMovementAnimationInfo},
+    prelude::Enemy,
+};
 
 /// An intermediate step between an enemy asset and a spawned enemy
 #[derive(Reflect)]
@@ -15,8 +18,9 @@ pub struct EnemyDefinition {
     pub gltf: Handle<Gltf>,
     pub scene: Handle<Scene>,
     pub graph: Handle<AnimationGraph>,
-    pub idle: AnimationNodeIndex,
-    pub walking: AnimationNodeIndex,
+    pub animation_transition_duration_ms: u64,
+    #[reflect(ignore)]
+    pub movement_animation: EnemyMovementAnimationInfo,
 }
 
 impl EnemyDefinition {
@@ -33,8 +37,15 @@ impl EnemyDefinition {
         let (graph, indices) = AnimationGraph::from_clips(clips.iter().map(|h| (*h).clone()));
         let named_indices: HashMap<_, AnimationNodeIndex> =
             names.into_iter().map(|s| s.as_ref()).zip(indices).collect();
-        let get = |s: &'static str| {
-            named_indices.get(s).ok_or(EnemyDefinitionLoadError::MissingAnimation(s)).copied()
+
+        // Helper to get an animation index by its name
+        let get = |s: &str| {
+            named_indices.get(s).ok_or(EnemyDefinitionLoadError::MissingAnimation(s.to_string())).copied()
+        };
+        // Get an animation index if a name was provided
+        let try_get = |s_maybe: &Option<String>| match s_maybe {
+            Some(s) => get(s).map(Some),
+            None => Ok(None),
         };
 
         Ok(Self {
@@ -44,8 +55,19 @@ impl EnemyDefinition {
             gltf: asset_server.load(&asset.gltf),
             scene: gltf.scenes.first().ok_or(EnemyDefinitionLoadError::NoDefaultScene)?.clone(),
             graph: graphs.add(graph),
-            idle: get("Idle")?,
-            walking: get("RunForward")?,
+            animation_transition_duration_ms: asset.animation_transition_duration_ms,
+            movement_animation: EnemyMovementAnimationInfo {
+                idle: get(&asset.movement_animations.idle)?,
+                idle_playback_speed: asset.movement_animations.idle_playback_speed,
+                walk_forwards: get(&asset.movement_animations.walk_forwards)?,
+                forward_playback_speed: asset.movement_animations.forward_playback_speed,
+                walk_backwards: try_get(&asset.movement_animations.walk_backwards)?,
+                backward_playback_speed: asset.movement_animations.backward_playback_speed,
+                walk_left: try_get(&asset.movement_animations.walk_left)?,
+                left_playback_speed: asset.movement_animations.left_playback_speed,
+                walk_right: try_get(&asset.movement_animations.walk_right)?,
+                right_playback_speed: asset.movement_animations.right_playback_speed,
+            },
         })
     }
 }
@@ -59,5 +81,5 @@ pub enum EnemyDefinitionLoadError {
     #[error("The model does not contain any scenes")]
     NoDefaultScene,
     #[error("The model was expected to contain an animation with name {0}")]
-    MissingAnimation(&'static str),
+    MissingAnimation(String),
 }

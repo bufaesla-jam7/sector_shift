@@ -33,6 +33,9 @@ fn main() {
 
     app.add_plugins(EguiPlugin::default());
 
+    #[cfg(feature = "dev")]
+    app.add_plugins(bevy_skein::SkeinPlugin::default());
+
     app.add_plugins(states::StatesPlugin);
 
     app.add_plugins(SectorShiftCorePlugin::new(AppState::LoadAssets));

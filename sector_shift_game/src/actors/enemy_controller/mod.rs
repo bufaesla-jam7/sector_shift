@@ -1,6 +1,7 @@
+mod animation;
 mod controller;
 mod controller_plugin;
-mod systems;
+mod movement;
 
 pub use self::controller::*;
 pub use self::controller_plugin::*;

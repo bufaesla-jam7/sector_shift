@@ -5,5 +5,12 @@
 	attributes: (
 		rotation_speed: 1.,
 		movement_velocity: 1.,
+	),
+	animation_transition_duration_ms: 100,
+	movement_animations: (
+		idle: "Idle",
+		walk_forwards: "RunForward",
+		walk_left: Some("RunLeft"),
+		walk_right: Some("RunRight")
 	)
 )

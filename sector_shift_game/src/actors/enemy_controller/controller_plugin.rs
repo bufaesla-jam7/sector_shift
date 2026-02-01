@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{actors::enemy_controller::systems::*, states::system_sets::GameSet};
+use crate::{
+    actors::enemy_controller::{animation, movement},
+    states::system_sets::GameSet,
+};
 
 pub struct EnemyControllerPlugin;
 
@@ -8,7 +11,14 @@ impl Plugin for EnemyControllerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (apply_rotation, apply_velocity).in_set(GameSet::Running),
+            (
+                movement::apply_rotation,
+                movement::apply_velocity,
+                animation::insert_targets,
+                animation::animate_movement,
+                animation::enemy_movement_test,
+            )
+                .in_set(GameSet::Running),
         );
     }
 }
