@@ -28,7 +28,7 @@ pub fn apply_velocity(query: Query<(&Enemy, &EnemyController, &mut LinearVelocit
                 MovementState::Right => Vec3::NEG_X,
             };
             velocity.0 = controller.rotation * direction * enemy.movement_velocity;
-        } else if velocity.length() != 0. {
+        } else if velocity.length() > 0.1 {
             velocity.0 = Vec3::ZERO;
         }
     }

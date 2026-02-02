@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    actors::enemy_controller::{action_handling, animation, movement},
+    actors::enemy_controller::{action_handling, animation, attack, movement},
     states::system_sets::GameSet,
 };
 
@@ -22,6 +22,8 @@ impl Plugin for EnemyControllerPlugin {
                 // Action handling
                 action_handling::start_requested_actions,
                 action_handling::drive_action_timers,
+                // Attack/damage handling
+                attack::insert_targets,
             )
                 .in_set(GameSet::Running),
         );

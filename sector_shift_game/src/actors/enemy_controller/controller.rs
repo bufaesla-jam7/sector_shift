@@ -1,11 +1,17 @@
 use std::time::Duration;
 
 use avian3d::prelude::*;
-use bevy::prelude::*;
+use bevy::{
+    ecs::{lifecycle::HookContext, world::DeferredWorld},
+    prelude::*,
+};
+
+use crate::actors::enemy_controller::attack::attack_hits;
 
 #[derive(Component, Reflect, Default, Debug)]
 #[reflect(Component)]
 #[require(RigidBody::Dynamic, LockedAxes::ROTATION_LOCKED)]
+#[component(on_add = Self::on_add)]
 /// Abstracts enemy movement, acting, and animation, also controlling the rotation, see:
 /// - [`Self::set_movement`]
 /// - [`Self::look_at`]
@@ -39,12 +45,18 @@ pub enum MovementState {
     Right,
 }
 
-#[derive(Reflect, Debug, Default)]
+#[derive(Reflect, Debug, Default, Clone, Copy)]
 #[reflect(Default)]
 pub enum EnemyAction {
     #[default]
     PrimaryAttack,
     SecondaryAttack,
+}
+
+#[derive(EntityEvent)]
+pub struct AttackImpactEvent {
+    pub entity: Entity,
+    pub action: EnemyAction,
 }
 
 impl EnemyController {
@@ -91,5 +103,9 @@ impl EnemyController {
     /// action)
     pub fn is_acting(&self) -> bool {
         self.action_state.is_some() || self.action_request.is_some()
+    }
+
+    fn on_add<'a>(mut world: DeferredWorld<'a>, hook: HookContext) {
+        world.commands().entity(hook.entity).observe(attack_hits);
     }
 }

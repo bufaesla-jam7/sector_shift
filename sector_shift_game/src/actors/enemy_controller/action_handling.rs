@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use sector_shift_core::prelude::EnemyLibrary;
 
-use crate::actors::enemy_controller::{EnemyAction, EnemyController};
+use crate::actors::enemy_controller::{AttackImpactEvent, EnemyAction, EnemyController};
 
 pub fn start_requested_actions(
     library: Res<EnemyLibrary>,
@@ -35,12 +35,18 @@ pub fn start_requested_actions(
     }
 }
 
-pub fn drive_action_timers(time: Res<Time>, controllers: Query<&mut EnemyController>) {
-    for mut controller in controllers {
-        if let Some((timer, _)) = &mut controller.action_state {
+pub fn drive_action_timers(
+    mut commands: Commands,
+    time: Res<Time>,
+    controllers: Query<(Entity, &mut EnemyController)>,
+) {
+    for (enemy_entity, mut controller) in controllers {
+        if let Some((timer, action)) = &mut controller.action_state {
             timer.tick(time.delta());
             if timer.is_finished() {
+                let action = *action;
                 controller.action_state = None;
+                commands.entity(enemy_entity).trigger(|entity| AttackImpactEvent { entity, action });
             }
         }
     }

@@ -19,4 +19,22 @@ pub struct EnemyAnimationGraphTempStorage(pub Handle<AnimationGraph>);
 #[derive(Component, Reflect)]
 #[reflect(Component)]
 /// This component is inserted in blender using [`bevy_skein`] and saved in the gltf assets
+/// It marks the root armature, into which bevy inserts the [`AnimationPlayer`]
 pub struct EnemyArmature;
+
+//
+//
+//
+
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+/// This works like [`EnemyAnimationTarget`], to get a direct pointer to the descendant of this
+/// [`Enemy`] that marks the center of the hitbox of an melee attack, or the origin of the
+/// projectile of a ranged attack.
+pub struct EnemyAttackHitboxTarget(pub Entity);
+
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+/// This component is inserted in blender using [`bevy_skein`] and saved in the gltf assets
+/// It marks the center of the hitbox of an enemy attack
+pub struct EnemyAttackHitbox;

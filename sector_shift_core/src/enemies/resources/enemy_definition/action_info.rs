@@ -29,6 +29,8 @@ pub struct EnemyAttack {
 pub enum AttackType {
     Melee {
         damage: i32,
+        /// Dimensions of a cuboid collider
+        hitbox: Vec3,
     },
     Ranged {
         // TODO
@@ -68,7 +70,10 @@ impl EnemyAttack {
 impl AttackType {
     fn from_asset(asset: &assets::AttackType) -> Self {
         match asset {
-            assets::AttackType::Melee { damage } => Self::Melee { damage: *damage },
+            assets::AttackType::Melee { damage, hitbox } => Self::Melee {
+                damage: *damage,
+                hitbox: *hitbox,
+            },
             assets::AttackType::Ranged {} => Self::Ranged {},
         }
     }

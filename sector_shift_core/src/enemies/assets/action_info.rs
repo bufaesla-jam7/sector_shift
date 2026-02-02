@@ -26,6 +26,8 @@ pub(crate) struct EnemyAttack {
 pub(crate) enum AttackType {
     Melee {
         damage: i32,
+        /// Dimensions of a cuboid collider
+        hitbox: Vec3,
     },
     Ranged {
         // TODO

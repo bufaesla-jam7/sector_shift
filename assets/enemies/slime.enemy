@@ -19,7 +19,8 @@
 			),
 			cast_duration_ms: 500,
 			kind: Melee (
-				damage: 10
+				damage: 10,
+				hitbox: (1., 1., 1.)
 			),
 			animation_name: "Hug",
 			animation_playback_speed: 1.
