@@ -5,7 +5,7 @@ use sector_shift_core::{environment::components::Skybox, prelude::*};
 use crate::{
     MAP_CELL_CEILING, MAP_CELL_HEIGHT, MAP_CELL_WIDTH, PLAYER_HEALTH,
     actors::{
-        components::Player,
+        components::{ActorCollisionLayer, Player},
         functions::{spawn_actor, spawn_enemy},
     },
     items::functions::spawn_item,
@@ -54,7 +54,13 @@ pub fn spawn_level(
     });
 
     // Spawn container for the level
-    let level_entity = commands.spawn((Name::new(level.id.clone()), Transform::default())).id();
+    let level_entity = commands
+        .spawn((
+            Name::new(level.id.clone()),
+            Transform::default(),
+            Visibility::Visible,
+        ))
+        .id();
 
     // Spawn floor
     let floor_entity = commands
@@ -148,7 +154,11 @@ pub fn spawn_level(
     .looking_to(direction, Vec3::Y);
 
     let player_entity = spawn_actor(commands, player_transform, PLAYER_HEALTH);
-    commands.entity(player_entity).insert((Player,));
+    commands.entity(player_entity).insert((
+        Name::new("Player"),
+        Player,
+        CollisionLayers::new(ActorCollisionLayer::Player, ActorCollisionLayer::all_bits()),
+    ));
 
     let camera_entity = commands.spawn((Camera3d::default(), Transform::from_xyz(0.0, 1.7, 0.0))).id();
 
@@ -207,6 +217,7 @@ pub fn spawn_level(
         .spawn((
             Name::new("Environment"),
             Transform::default(),
+            Visibility::Visible,
             ChildOf(level_entity),
         ))
         .id();

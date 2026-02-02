@@ -6,7 +6,7 @@ use crate::enemies::{
 };
 
 /// A system that processes loaded enemy assets and adds them to the EnemyLibrary
-pub fn process_enemies(
+pub(crate) fn process_enemies(
     asset_server: Res<AssetServer>,
     gltfs: Res<Assets<Gltf>>,
     mut graphs: ResMut<Assets<AnimationGraph>>,

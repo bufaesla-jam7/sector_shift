@@ -9,7 +9,7 @@ pub struct EnemyLibrary {
     /// A map of loaded enemy definitions, sorted by their id
     pub map: HashMap<String, EnemyDefinition>,
     /// A list of enemy assets currently being loaded
-    pub loading: Vec<Handle<EnemyAsset>>,
+    pub(crate) loading: Vec<Handle<EnemyAsset>>,
     /// Indicates that all handles in `Self.loading` are fully loaded
     pub loading_finished: bool,
 }

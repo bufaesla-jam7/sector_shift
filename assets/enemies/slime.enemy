@@ -1,5 +1,29 @@
 (
     id: "slime",
     sprite: "sprites/enemies/slime.png",
-	gltf: "models/enemies/Alien.glb"
+	gltf: "models/enemies/Alien.glb",
+	attributes: (
+		rotation_speed: 1.,
+		movement_velocity: 1.,
+	),
+	animation_transition_duration_ms: 100,
+	movement_animations: (
+		idle: "Idle",
+		walk_forwards: "RunForward"
+	),
+	actions: (
+		primary_attack: (
+			range: (
+				start: 2.,
+				end: 3.
+			),
+			cast_duration_ms: 500,
+			kind: Melee (
+				damage: 10,
+				hitbox: (1., 1., 1.)
+			),
+			animation_name: "Hug",
+			animation_playback_speed: 1.
+		)
+	)
 )

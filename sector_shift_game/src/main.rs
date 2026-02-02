@@ -30,6 +30,9 @@ fn main() {
 
     app.add_plugins(avian3d::PhysicsPlugins::default());
 
+    #[cfg(feature = "dev")]
+    app.add_plugins(bevy_skein::SkeinPlugin::default());
+
     app.add_plugins(states::StatesPlugin);
 
     app.add_plugins(SectorShiftCorePlugin::new(GameState::LoadAssets));
