@@ -4,7 +4,7 @@ use crate::{
     enemies::assets::EnemyAsset, environment::assets::EnvObjAsset, items::assets::ItemAsset, prelude::*,
 };
 
-pub trait DataLibrary: Resource + Send + Sync + 'static {
+pub(crate) trait DataLibrary: Resource + Send + Sync + 'static {
     /// The type of the asset
     type Asset: Asset;
     /// Where these assets are stored

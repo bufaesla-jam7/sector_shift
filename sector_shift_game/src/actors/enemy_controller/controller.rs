@@ -15,7 +15,7 @@ pub struct EnemyController {
     pub(super) rotation: Quat,
     /// Used to signal the need for an animation change to the animation handling systems, which
     /// will reset this value to [`false`].
-    pub(super) animation_changed: bool,
+    pub(super) movement_changed: bool,
     /// Used to prevent the AI from having to care about attributes like the time an action takes
     pub(super) action_request: Option<EnemyAction>,
     /// The action that the enemy is currently performing, if any
@@ -39,8 +39,10 @@ pub enum MovementState {
     Right,
 }
 
-#[derive(Reflect, Debug)]
+#[derive(Reflect, Debug, Default)]
+#[reflect(Default)]
 pub enum EnemyAction {
+    #[default]
     PrimaryAttack,
     SecondaryAttack,
 }
@@ -73,7 +75,7 @@ impl EnemyController {
     pub fn set_movement(&mut self, movement: MovementState) {
         if self.movement_state != movement {
             self.movement_state = movement;
-            self.animation_changed = true;
+            self.movement_changed = true;
         }
     }
 
@@ -82,7 +84,6 @@ impl EnemyController {
     pub fn act(&mut self, action: EnemyAction) {
         if self.action_state.is_none() {
             self.action_request = Some(action);
-            self.animation_changed = true;
         }
     }
 

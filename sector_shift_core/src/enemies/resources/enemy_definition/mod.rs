@@ -1,10 +1,13 @@
+mod movement_info;
+pub use self::movement_info::*;
+
+mod action_info;
+pub use self::action_info::*;
+
 use bevy::{platform::collections::HashMap, prelude::*};
 use thiserror::Error;
 
-use crate::{
-    enemies::{assets::EnemyAsset, components::EnemyMovementAnimationInfo},
-    prelude::Enemy,
-};
+use crate::{enemies::assets::EnemyAsset, prelude::Enemy};
 
 /// An intermediate step between an enemy asset and a spawned enemy
 #[derive(Reflect)]
@@ -20,12 +23,13 @@ pub struct EnemyDefinition {
     pub graph: Handle<AnimationGraph>,
     pub animation_transition_duration_ms: u64,
     #[reflect(ignore)]
-    pub movement_animation: EnemyMovementAnimationInfo,
+    pub movement_animation_info: EnemyMovementAnimationInfo,
+    pub action_info: EnemyActionInfo,
 }
 
 impl EnemyDefinition {
     /// Helper to convert from [`EnemyAsset`] to [`EnemyDefinition`]
-    pub fn from_asset(
+    pub(crate) fn from_asset(
         asset_server: &AssetServer,
         gltfs: &Assets<Gltf>,
         graphs: &mut Assets<AnimationGraph>,
@@ -56,18 +60,12 @@ impl EnemyDefinition {
             scene: gltf.scenes.first().ok_or(EnemyDefinitionLoadError::NoDefaultScene)?.clone(),
             graph: graphs.add(graph),
             animation_transition_duration_ms: asset.animation_transition_duration_ms,
-            movement_animation: EnemyMovementAnimationInfo {
-                idle: get(&asset.movement_animations.idle)?,
-                idle_playback_speed: asset.movement_animations.idle_playback_speed,
-                walk_forwards: get(&asset.movement_animations.walk_forwards)?,
-                forward_playback_speed: asset.movement_animations.forward_playback_speed,
-                walk_backwards: try_get(&asset.movement_animations.walk_backwards)?,
-                backward_playback_speed: asset.movement_animations.backward_playback_speed,
-                walk_left: try_get(&asset.movement_animations.walk_left)?,
-                left_playback_speed: asset.movement_animations.left_playback_speed,
-                walk_right: try_get(&asset.movement_animations.walk_right)?,
-                right_playback_speed: asset.movement_animations.right_playback_speed,
-            },
+            movement_animation_info: EnemyMovementAnimationInfo::from_asset(
+                &get,
+                &try_get,
+                &asset.movement_animations,
+            )?,
+            action_info: EnemyActionInfo::from_asset(&get, &asset.actions)?,
         })
     }
 }

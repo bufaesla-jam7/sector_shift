@@ -7,7 +7,6 @@ use crate::actors::enemy_controller::EnemyController;
 /// Spawns an enemy with the following components:
 /// - [`Name`]
 /// - [`Enemy`]
-/// - [`EnemyMovementAnimationInfo`]
 /// - [`EnemyController`]
 /// - [`RigidBody`] and [`LockedAxes`] as required by [`EnemyController`]
 /// - [`SceneRoot`]
@@ -24,9 +23,9 @@ pub fn spawn_enemy(
     if let Some(definition) = enemy_library.get(enemy_id) {
         let entity = commands
             .spawn((
+                // This name is used to index into the enemy map of the [`EnemyLibrary`]
                 Name::new(definition.id.clone()),
                 definition.attributes.clone(),
-                definition.movement_animation.clone(),
                 EnemyController::new(definition.animation_transition_duration_ms),
                 SceneRoot(definition.scene.clone()),
                 EnemyAnimationGraphTempStorage(definition.graph.clone()),

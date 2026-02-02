@@ -10,5 +10,19 @@
 	movement_animations: (
 		idle: "Idle",
 		walk_forwards: "RunForward"
+	),
+	actions: (
+		primary_attack: (
+			range: (
+				start: 2.,
+				end: 3.
+			),
+			cast_duration_ms: 500,
+			kind: Melee (
+				damage: 10
+			),
+			animation_name: "Hug",
+			animation_playback_speed: 1.
+		)
 	)
 )

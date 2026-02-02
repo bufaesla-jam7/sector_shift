@@ -1,3 +1,4 @@
+mod action_handling;
 mod animation;
 mod controller;
 mod controller_plugin;

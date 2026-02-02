@@ -3,4 +3,4 @@ mod library_spec;
 mod systems;
 
 pub use directory_loader_plugin::DirectoryLoaderPlugin;
-pub use library_spec::*;
+use library_spec::*;

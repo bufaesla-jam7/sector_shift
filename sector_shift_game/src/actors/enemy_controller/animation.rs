@@ -1,12 +1,10 @@
 use bevy::prelude::*;
 use sector_shift_core::{
-    enemies::components::{
-        EnemyAnimationGraphTempStorage, EnemyAnimationTarget, EnemyArmature, EnemyMovementAnimationInfo,
-    },
-    prelude::Enemy,
+    enemies::components::{EnemyAnimationGraphTempStorage, EnemyAnimationTarget, EnemyArmature},
+    prelude::{Enemy, EnemyLibrary},
 };
 
-use crate::actors::enemy_controller::{EnemyController, MovementState};
+use crate::actors::enemy_controller::{EnemyAction, EnemyController, MovementState};
 
 pub fn insert_targets(
     mut commands: Commands,
@@ -54,66 +52,101 @@ pub fn insert_targets(
 }
 
 pub fn animate_movement(
-    enemies: Query<(
-        &EnemyMovementAnimationInfo,
-        &EnemyAnimationTarget,
-        &mut EnemyController,
-    )>,
+    library: Res<EnemyLibrary>,
+    enemies: Query<(&Name, &EnemyAnimationTarget, &mut EnemyController)>,
     mut animation_players: Query<(&mut AnimationPlayer, &mut AnimationTransitions), With<EnemyArmature>>,
 ) {
-    for (animations, animation_target, mut controller) in enemies {
-        if controller.animation_changed {
-            controller.animation_changed = false;
-            if let Ok((mut animation_player, mut animation_transitions)) =
-                animation_players.get_mut(animation_target.0)
-            {
-                if let Some((_, action)) = &controller.action_state {
-                    todo!("animate enemy actions");
-                } else {
-                    let (animation_index, speed) = match controller.movement_state {
-                        MovementState::Idle => (animations.idle, animations.idle_playback_speed),
-                        MovementState::Forward => {
-                            (animations.walk_forwards, animations.forward_playback_speed)
-                        },
-                        MovementState::Backward => match animations.walk_backwards {
-                            // Use backward animation if available
-                            Some(index) => (index, animations.backward_playback_speed),
-                            // Fallback to inverse forward animation
+    for (name, animation_target, mut controller) in enemies {
+        let movement_animations = &library.map[name.as_str()].movement_animation_info;
+        let action_info = &library.map[name.as_str()].action_info;
+
+        let Ok((mut animation_player, mut animation_transitions)) =
+            animation_players.get_mut(animation_target.0)
+        else {
+            warn!("EnemyController has an invalid EnemyAnimationTarget");
+            continue;
+        };
+        if controller.movement_changed || animation_player.all_finished() {
+            controller.movement_changed = false;
+
+            let ((animation_index, speed), is_repeating);
+
+            // The enemy is attacking
+            if let Some((_, action)) = &controller.action_state {
+                (animation_index, speed) = match action {
+                    EnemyAction::PrimaryAttack => (
+                        action_info.primary_attack.animation_index,
+                        action_info.primary_attack.animation_playback_speed,
+                    ),
+                    EnemyAction::SecondaryAttack => {
+                        let attack = action_info
+                            .secondary_attack
+                            .as_ref()
+                            .expect("Guaranteed to exist by the EnemyController API");
+                        (attack.animation_index, attack.animation_playback_speed)
+                    },
+                };
+                // Do not repeat the attacking animation
+                is_repeating = false;
+            // The enemy is moving
+            } else {
+                (animation_index, speed) = match controller.movement_state {
+                    MovementState::Idle => (
+                        movement_animations.idle,
+                        movement_animations.idle_playback_speed,
+                    ),
+                    MovementState::Forward => (
+                        movement_animations.walk_forwards,
+                        movement_animations.forward_playback_speed,
+                    ),
+                    MovementState::Backward => match movement_animations.walk_backwards {
+                        // Use backward animation if available
+                        Some(index) => (index, movement_animations.backward_playback_speed),
+                        // Fallback to inverse forward animation
+                        None => (
+                            movement_animations.walk_forwards,
+                            -movement_animations.backward_playback_speed,
+                        ),
+                    },
+                    MovementState::Left => match movement_animations.walk_left {
+                        // Use left animation if available
+                        Some(index) => (index, movement_animations.left_playback_speed),
+                        None => match movement_animations.walk_right {
+                            // Fallback to inverse right animation if available
+                            Some(index) => (index, -movement_animations.left_playback_speed),
+                            // Fallback to just playing idle
                             None => (
-                                animations.walk_forwards,
-                                -animations.backward_playback_speed,
+                                movement_animations.idle,
+                                movement_animations.left_playback_speed,
                             ),
                         },
-                        MovementState::Left => match animations.walk_left {
-                            // Use left animation if available
-                            Some(index) => (index, animations.left_playback_speed),
-                            None => match animations.walk_right {
-                                // Fallback to inverse right animation if available
-                                Some(index) => (index, -animations.left_playback_speed),
-                                // Fallback to just playing idle
-                                None => (animations.idle, animations.left_playback_speed),
-                            },
+                    },
+                    MovementState::Right => match movement_animations.walk_right {
+                        // Use right animation if available
+                        Some(index) => (index, movement_animations.right_playback_speed),
+                        None => match movement_animations.walk_left {
+                            // Fallback to inverse left animation if available
+                            Some(index) => (index, -movement_animations.right_playback_speed),
+                            // Fallback to just playing idle
+                            None => (
+                                movement_animations.idle,
+                                movement_animations.right_playback_speed,
+                            ),
                         },
-                        MovementState::Right => match animations.walk_right {
-                            // Use right animation if available
-                            Some(index) => (index, animations.right_playback_speed),
-                            None => match animations.walk_left {
-                                // Fallback to inverse left animation if available
-                                Some(index) => (index, -animations.right_playback_speed),
-                                // Fallback to just playing idle
-                                None => (animations.idle, animations.right_playback_speed),
-                            },
-                        },
-                    };
-                    animation_transitions
-                        .play(
-                            &mut animation_player,
-                            animation_index,
-                            controller.animation_transition_duration,
-                        )
-                        .repeat()
-                        .set_speed(speed);
-                }
+                    },
+                };
+                // Repeat the movement animation
+                is_repeating = true;
+            };
+            let active_animation = animation_transitions
+                .play(
+                    &mut animation_player,
+                    animation_index,
+                    controller.animation_transition_duration,
+                )
+                .set_speed(speed);
+            if is_repeating {
+                active_animation.repeat();
             }
         }
     }
@@ -125,8 +158,19 @@ pub fn enemy_movement_test(input: Res<ButtonInput<KeyCode>>, query: Query<&mut E
         KeyCode::ArrowRight,
         KeyCode::ArrowUp,
         KeyCode::ArrowDown,
+        KeyCode::KeyQ,
+        KeyCode::KeyE,
     ]) {
         for mut controller in query {
+            if input.just_pressed(KeyCode::KeyQ) {
+                controller.act(EnemyAction::PrimaryAttack);
+                continue;
+            }
+            if input.just_pressed(KeyCode::KeyE) {
+                controller.act(EnemyAction::SecondaryAttack);
+                continue;
+            }
+
             let state = if input.just_pressed(KeyCode::ArrowUp) {
                 MovementState::Forward
             } else if input.just_pressed(KeyCode::ArrowDown) {
