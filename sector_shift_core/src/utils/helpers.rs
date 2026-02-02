@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use crate::prelude::*;
 use bevy::{asset::UnapprovedPathMode, prelude::*};
 
@@ -10,13 +12,12 @@ pub fn all_assets_loaded(
 }
 
 pub fn asset_plugin_with_fixed_path() -> AssetPlugin {
-    let asset_path = env!("CARGO_MANIFEST_DIR")
-        .rsplit_once("/sector_shift_core")
-        .map(|(p, _)| p.to_string())
-        .unwrap_or_else(|| ".".to_string())
-        + "/assets";
+    let asset_path =
+        env!("CARGO_MANIFEST_DIR").rsplit_once("sector_shift_core").map(|(p, _)| p).unwrap_or_else(|| ".");
+    let file_path = PathBuf::from(asset_path).join("assets");
+
     AssetPlugin {
-        file_path: asset_path,
+        file_path: file_path.to_string_lossy().to_string(),
         // Allow scenes to be loaded from anywhere on disk
         unapproved_path_mode: UnapprovedPathMode::Allow,
         ..default()
