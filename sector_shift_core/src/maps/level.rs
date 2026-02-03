@@ -41,7 +41,7 @@ impl Default for Level {
 // Constructor + Serialization methods
 impl Level {
     fn get_path_for_id(id: &str) -> PathBuf {
-        format!("./assets/levels/{}.ron", id).into()
+        format!("./assets/levels/{id}.ron").into()
     }
 
     pub fn load(id: impl ToString) -> Self {
