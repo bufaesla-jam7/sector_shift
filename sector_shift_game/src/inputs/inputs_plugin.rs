@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use crate::states::states::DebugHudState;
 use crate::{
     inputs::systems::{player_look, player_movement},
-    states::system_sets::GameSet,
+    states::system_sets::GameSystems,
 };
 
 pub struct InputsPlugin;
@@ -14,7 +14,7 @@ impl Plugin for InputsPlugin {
         let player_look = player_look.run_if(in_state(DebugHudState::Disabled));
         app.add_systems(
             Update,
-            (player_look, player_movement).in_set(GameSet::Running),
+            (player_look, player_movement).in_set(GameSystems::Running),
         );
     }
 }

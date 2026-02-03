@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     actors::enemy_controller::{action_handling, animation, attack, movement},
-    states::system_sets::GameSet,
+    states::system_sets::GameSystems,
 };
 
 pub struct EnemyControllerPlugin;
@@ -25,7 +25,7 @@ impl Plugin for EnemyControllerPlugin {
                 // Attack/damage handling
                 attack::insert_targets,
             )
-                .in_set(GameSet::Running),
+                .in_set(GameSystems::Running),
         );
     }
 }
