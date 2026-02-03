@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
-/// see [`EnemyMovementAnimationInfo`]
+/// see [`crate::enemies::resources::EnemyMovementAnimationInfo`]
 pub(crate) struct EnemyMovementAnimationNames {
     pub idle: String,
 

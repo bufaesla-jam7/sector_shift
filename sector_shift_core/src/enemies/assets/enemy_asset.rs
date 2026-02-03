@@ -11,7 +11,7 @@ use crate::{
 /// Need to add more data later for AI, stats, etc.
 #[derive(Serialize, Deserialize, Asset, TypePath)]
 pub(crate) struct EnemyAsset {
-    /// This must be unique as it is used as the key when looking up from the [`EnemyLibrary`] resource or MapObject::Enemy
+    /// This must be unique as it is used as the key when looking up from the [`crate::prelude::EnemyLibrary`] resource or MapObject::Enemy
     pub id: String,
     /// This is the path to the image to be loaded
     pub sprite: String,
@@ -20,14 +20,14 @@ pub(crate) struct EnemyAsset {
     #[serde(skip)]
     #[dependency]
     /// Asset dependency, the gltf has to be loaded before we can convert [`EnemyAsset`] to
-    /// [`EnemyDefinition`]
+    /// [`crate::enemies::resources::EnemyDefinition`]
     pub gltf_handle: Option<Handle<Gltf>>,
     /// Attributes directly defining [`Enemy`] component
     pub attributes: Enemy,
     /// Duration a transition between two animations takes, in milliseconds
     pub animation_transition_duration_ms: u64,
     /// Names of movement animations to be extracted from the gltf
-    /// Needed to build the [`EnemyMovementAnimationInfo`] component
+    /// Needed to build the [`crate::enemies::resources::EnemyMovementAnimationInfo`] component
     pub movement_animations: EnemyMovementAnimationNames,
     /// The definition of the attacks an enemy can perform
     pub actions: EnemyActionInfo,

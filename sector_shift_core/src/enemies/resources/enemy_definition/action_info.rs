@@ -24,7 +24,7 @@ pub struct EnemyAttack {
 }
 
 #[derive(Reflect, Clone)]
-/// Currently identical to [`assets::AttackType`], but probably not anymore once [`Self::Ranged`]
+/// Currently identical to [`AttackType`], but probably not anymore once [`Self::Ranged`]
 /// is added
 pub enum AttackType {
     Melee {
