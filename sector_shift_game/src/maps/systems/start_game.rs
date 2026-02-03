@@ -2,29 +2,16 @@ use bevy::{
     prelude::*,
     window::{CursorGrabMode, CursorOptions},
 };
-use sector_shift_core::prelude::*;
 
-use crate::maps::functions::spawn_level;
+use crate::maps::functions::SpawnLevel;
 
 pub fn start_game(
-    mut commands: Commands,
-    environment_library: Res<EnvObjLibrary>,
-    enemy_library: Res<EnemyLibrary>,
-    item_library: Res<ItemLibrary>,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+    mut spawn_level: MessageWriter<SpawnLevel>,
     mut cursor_options: Single<&mut CursorOptions>,
 ) {
-    let level = Level::load("level_1");
-    spawn_level(
-        &mut commands,
-        &mut meshes,
-        &mut materials,
-        &level,
-        &environment_library,
-        &enemy_library,
-        &item_library,
-    );
+    spawn_level.write(SpawnLevel {
+        level_id: String::from("level_1"),
+    });
 
     cursor_options.grab_mode = CursorGrabMode::Locked;
     cursor_options.visible = false;

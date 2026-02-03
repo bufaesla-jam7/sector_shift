@@ -9,10 +9,56 @@ use crate::{
         functions::{spawn_actor, spawn_enemy},
     },
     items::functions::spawn_item,
-    maps::functions::position_to_transform::position_to_transform,
+    maps::{exit::spawn_exit, functions::position_to_transform::position_to_transform},
 };
 
-pub fn spawn_level(
+#[derive(Debug, Reflect, Component)]
+#[reflect(Component)]
+pub struct LevelMarker;
+
+#[derive(Debug, Reflect, Message)]
+pub struct SpawnLevel {
+    pub level_id: String,
+}
+
+pub fn process_spawn_level(
+    mut messages: MessageReader<SpawnLevel>,
+    mut commands: Commands,
+    environment_library: Res<EnvObjLibrary>,
+    enemy_library: Res<EnemyLibrary>,
+    item_library: Res<ItemLibrary>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    level: Option<Single<Entity, With<LevelMarker>>>,
+    player: Option<Single<Entity, With<Player>>>,
+) {
+    /* Only process the last event, in case there are more */
+    if let Some(message) = messages.read().last() {
+        /* Despawn level entity */
+        if let Some(level) = level {
+            commands.entity(*level).despawn();
+        }
+
+        /* Despawn player entity */
+        if let Some(player) = player {
+            /* TODO: Could be persistent, but is spawned as part of spawn_level */
+            commands.entity(*player).despawn();
+        }
+
+        let level = Level::load(message.level_id.clone());
+        spawn_level(
+            &mut commands,
+            &mut meshes,
+            &mut materials,
+            &level,
+            &environment_library,
+            &enemy_library,
+            &item_library,
+        );
+    }
+}
+
+fn spawn_level(
     commands: &mut Commands,
     meshes: &mut Assets<Mesh>,
     materials: &mut Assets<StandardMaterial>,
@@ -59,6 +105,7 @@ pub fn spawn_level(
             Name::new(level.id.clone()),
             Transform::default(),
             Visibility::Visible,
+            LevelMarker,
         ))
         .id();
 
@@ -208,7 +255,11 @@ pub fn spawn_level(
                 }
             },
             // TODO
-            MapObject::Exit(_level_id) => (),
+            MapObject::Exit(level_id) => {
+                if let Some(entity) = spawn_exit(commands, level_id, transform) {
+                    commands.entity(level_entity).add_child(entity);
+                }
+            },
         }
     }
 
