@@ -158,7 +158,7 @@ pub fn draw_ui(
             if ui.button("Save Map").clicked() {
                 map_data.level.id = ui_state.level_name.clone();
                 if let Err(e) = map_data.level.save() {
-                    ui_state.status_message = format!("Error Saving Map: {}", e);
+                    ui_state.status_message = format!("Error Saving Map: {e}");
                 } else {
                     ui_state.status_message = "Map Saved Successfully".to_string();
                 }
