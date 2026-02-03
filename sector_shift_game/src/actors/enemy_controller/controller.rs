@@ -76,6 +76,7 @@ impl EnemyController {
 
     /// Rotate the enemy towards `position`.
     /// `position` does not have to be normalized and can be zero
+    #[allow(unused)]
     pub fn look_at(&mut self, position: Vec3) {
         self.rotation = Quat::from_rotation_arc(Vec3::Z, position.with_y(0.).normalize_or(Vec3::Z));
     }
