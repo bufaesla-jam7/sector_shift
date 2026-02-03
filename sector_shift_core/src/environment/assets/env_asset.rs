@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Represents a generic environment object model
 #[derive(Serialize, Deserialize, Asset, TypePath)]
 pub struct EnvObjAsset {
-    /// This must be unique as it is used as the key when looking up from the [`EnvObjLibrary`]
+    /// This must be unique as it is used as the key when looking up from the [`crate::prelude::EnvObjLibrary`]
     /// resource
     pub id: String,
     /// This is the path to the gltf model to be loaded
@@ -17,7 +17,7 @@ pub struct EnvObjAsset {
     #[serde(skip)]
     #[dependency]
     /// Asset dependency, the gltf has to be loaded before we can convert [`EnvObjAsset`] to
-    /// [`EnvObjDefinition`]
+    /// [`crate::environment::resources::EnvObjDefinition`]
     pub gltf_handle: Option<Handle<Gltf>>,
 }
 

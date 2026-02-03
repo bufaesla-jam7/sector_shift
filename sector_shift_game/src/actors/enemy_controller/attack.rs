@@ -54,7 +54,7 @@ pub fn attack_hits(
                 EnemyAction::SecondaryAttack => action_info.secondary_attack.as_ref().unwrap(),
             };
             match attack.kind {
-                AttackType::Melee { damage, hitbox } => {
+                AttackType::Melee { damage: _, hitbox } => {
                     let shape = Collider::cuboid(hitbox.x, hitbox.y, hitbox.z);
                     let config = ShapeCastConfig {
                         max_distance: 0.1,

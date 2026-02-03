@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use sector_shift_core::prelude::all_assets_loaded;
 
-use crate::states::{states::AppState, system_sets::AppSet, systems::set_app_state_running};
+use crate::states::{app_state::AppState, system_sets::AppSystems, systems::set_app_state_running};
 
 pub struct StatesPlugin;
 impl Plugin for StatesPlugin {
@@ -10,14 +10,17 @@ impl Plugin for StatesPlugin {
 
         app.configure_sets(
             Update,
-            AppSet::LoadAssets.run_if(in_state(AppState::LoadAssets)),
+            AppSystems::LoadAssets.run_if(in_state(AppState::LoadAssets)),
         );
 
-        app.configure_sets(Update, AppSet::Running.run_if(in_state(AppState::InEditor)));
+        app.configure_sets(
+            Update,
+            AppSystems::Running.run_if(in_state(AppState::InEditor)),
+        );
 
         app.add_systems(
             Update,
-            set_app_state_running.in_set(AppSet::LoadAssets).run_if(all_assets_loaded),
+            set_app_state_running.in_set(AppSystems::LoadAssets).run_if(all_assets_loaded),
         );
     }
 }

@@ -4,7 +4,7 @@ use sector_shift_core::{SectorShiftCorePlugin, utils::asset_plugin_with_fixed_pa
 
 use crate::{
     resources::{BrushData, MapData, UiState},
-    states::{states::AppState, system_sets::AppSet},
+    states::{app_state::AppState, system_sets::AppSystems},
     systems::{draw_grid, draw_ui, handle_keyboard_input, handle_mouse_input, spawn_camera},
 };
 
@@ -47,7 +47,7 @@ fn main() {
     app.add_systems(Startup, spawn_camera);
     app.add_systems(
         Update,
-        (draw_grid, handle_keyboard_input, handle_mouse_input).in_set(AppSet::Running),
+        (draw_grid, handle_keyboard_input, handle_mouse_input).in_set(AppSystems::Running),
     );
     app.add_systems(bevy_egui::EguiPrimaryContextPass, draw_ui);
 

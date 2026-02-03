@@ -208,7 +208,7 @@ pub fn spawn_level(
                 }
             },
             // TODO
-            MapObject::Exit(level_id) => (),
+            MapObject::Exit(_level_id) => (),
         }
     }
 

@@ -4,7 +4,7 @@ use crate::enemies::{assets::EnemyMovementAnimationNames, resources::EnemyDefini
 
 #[derive(Clone, Default)]
 /// Component storing the [`AnimationNodeIndex`] referencing different movement animations.
-/// It is stored on the same entity as the [`Enemy`] component
+/// It is stored on the same entity as the [`crate::prelude::Enemy`] component
 pub struct EnemyMovementAnimationInfo {
     /// Index of the idle animation
     pub idle: AnimationNodeIndex,
