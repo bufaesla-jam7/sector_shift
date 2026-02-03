@@ -1,4 +1,4 @@
-pub mod states;
+pub mod app_state;
 pub mod system_sets;
 pub mod systems;
 

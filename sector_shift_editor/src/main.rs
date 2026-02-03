@@ -4,7 +4,7 @@ use sector_shift_core::{SectorShiftCorePlugin, utils::asset_plugin_with_fixed_pa
 
 use crate::{
     resources::{BrushData, MapData, UiState},
-    states::{states::AppState, system_sets::AppSet},
+    states::{app_state::AppState, system_sets::AppSet},
     systems::{draw_grid, draw_ui, handle_keyboard_input, handle_mouse_input, spawn_camera},
 };
 
